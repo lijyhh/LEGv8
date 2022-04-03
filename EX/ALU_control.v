@@ -67,6 +67,9 @@ module ALU_control(
           `SUB, `SUBI, `SUBIS, `SUBS: begin
             ALUCtl = `ALU_SUB;
           end
+          `BR: begin
+            ALUCtl = `ALU_PASS;
+          end
           `LSL: begin
             ALUCtl = `ALU_LSL;
           end
