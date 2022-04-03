@@ -107,7 +107,7 @@ module ALU(
         ALUTmp = ~(a | b);
       end
       `ALU_XOR: begin     
-        buff = a ^ b;
+        ALUTmp = a ^ b;
       end
       `ALU_LSL: begin
         ALUTmp = a << b;
