@@ -106,6 +106,15 @@ module ALU(
       `ALU_NOR: begin
         ALUTmp = ~(a | b);
       end
+      `ALU_XOR: begin     
+        buff = a ^ b;
+      end
+      `ALU_LSL: begin
+        ALUTmp = a << b;
+      end
+      `ALU_LSR: begin
+        ALUTmp = a >> b;
+      end
       default: begin
         ALUTmp = 'b1; // Dont care
         Overflow = 1'b0;
