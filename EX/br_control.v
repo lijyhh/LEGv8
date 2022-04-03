@@ -70,17 +70,17 @@ module br_control(
       `BCOND_OP_COND: begin
         case( ConBr_type )
           // Signed
-          `BCOND_EQ: PCSrc <= Zero == 1; 
-          `BCOND_NE: PCSrc <= Zero == 0;
-          `BCOND_LT: PCSrc <= Negative != Overflow;
-          `BCOND_LE: PCSrc <= (Zero == 1) || (Negative != Overflow);
-          `BCOND_GT: PCSrc <= (Zero == 0) && (Negative == Overflow);
-          `BCOND_GE: PCSrc <= Negative == Overflow;
+          `BCOND_EQ: PCSrc <= ( Zero == 1 ); 
+          `BCOND_NE: PCSrc <= ( Zero == 0 );
+          `BCOND_LT: PCSrc <= ( Negative != Overflow );
+          `BCOND_LE: PCSrc <= ( ( Zero == 1 ) || ( Negative != Overflow ) );
+          `BCOND_GT: PCSrc <= ( ( Zero == 0 ) && ( Negative == Overflow ) );
+          `BCOND_GE: PCSrc <= ( Negative == Overflow );
           // Unsigned
-          `BCOND_CC: PCSrc <= (Co == 0);
-          `BCOND_LS: PCSrc <= ~((Co == 1) && (Zero == 0));
-          `BCOND_HI: PCSrc <= (Co == 1) && (Zero == 0);
-          `BCOND_CS: PCSrc <= (Co == 1);
+          `BCOND_CC: PCSrc <= ( Co == 0 );
+          `BCOND_LS: PCSrc <= ( ( Co == 0 ) || ( Zero == 1 ) );
+          `BCOND_HI: PCSrc <= ( ( Co == 1 ) && ( Zero == 0 ) );
+          `BCOND_CS: PCSrc <= ( Co == 1 );
           default:   PCSrc <= 'b0;
         endcase
       end
