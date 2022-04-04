@@ -46,6 +46,12 @@ def trans_inst(insts):
             insts[i] = inst.replace('LR', 'X30')
         elif inst == 'XZR':
             insts[i] = inst.replace('XZR', 'X31')
+        elif inst == 'MOV':
+            insts[i] = inst.replace('MOV', 'ADDI')
+            insts.append('#0')
+        elif inst == 'CMP':
+            insts[i] = inst.replace('CMP', 'SUBS')
+            insts.insert(1, 'X31')
         i = i + 1
 
     return insts
@@ -220,7 +226,7 @@ def read_inst(file):
     for line in fp:
         # Remove comment
         line = line.replace('\n', '')
-        tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9 ]*[\W]*", '', line)
+        tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9\W]*[\W]*", '', line)
         if tmp == '':
             pass
         else:
@@ -255,7 +261,7 @@ def batch_process_insts(src_file, obj_file, base):
 if __name__ == '__main__':
 
     # Get Instruction from keyboard and display
-    #single_inst_from_keyboard()
+    # single_inst_from_keyboard()
 
 
     # Process instructions in batch mode
