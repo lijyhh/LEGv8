@@ -25,9 +25,9 @@
 //
 // Module
 module datapath #( 
-  parameter INST_FILE = `INST_FILE,
-  parameter REG_FILE = `REG_FILE,
-  parameter DATA_FILE = `DATA_FILE) (
+  parameter INST_FILE = `TEST_INST_FILE,
+  parameter REG_FILE  = `TEST_REG_FILE ,
+  parameter DATA_FILE = `TEST_DATA_FILE) (
   clk      ,            
   rst_n    ,        
   RegWrite ,

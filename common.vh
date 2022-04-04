@@ -31,11 +31,11 @@
 
 // Test
 // Instruction memory for test
-`define INST_MEM_TEST_FILE "data/test/inst_mem.txt"
+`define TEST_INST_FILE "data/test/inst_mem.txt"
 // Register memory for test
-`define REG_MEM_TEST_FILE "data/test/reg_mem.txt"
+`define TEST_REG_FILE "data/test/reg_mem.txt"
 // Data memory for test
-`define DATA_MEM_TEST_FILE "data/test/data_mem.txt"
+`define TEST_DATA_FILE "data/test/data_mem.txt"
 
 //*******************************
 // Definition of instruction opcode
