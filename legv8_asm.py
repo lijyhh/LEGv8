@@ -21,7 +21,7 @@ import re
         instruction name must be all uppercase. In fact, you can use other letters to name registers, such as
         'ADD, r1, x2, y3', or just ignore the register name(ADD 1,2,3), we dont really care it.
     4. Support XZR, SP, FP, LR registers, you can use it in anywhere, such as: 'ADD XZR, FP, SP'.
-    5. Negative is not allowed, you cannot input 'ADDI X1, X2, #-3' or maybe 'B #-6'.
+    5. Negative is allowed now, you can input 'ADDI X1, X2, #-3' or maybe 'B #-6'.
     6. Comment in your asm code is allowed now, such as: 'ADD X1, X2, X3 ;X1 = X2 + X3' or maybe "; This is a asm code" 
         on a separate line.
     7. '\n' is allowed in your instruction, such as: 'ADD X1, X2, X3\n', empty is also allowed.
@@ -75,12 +75,12 @@ def single_inst_parse(raw_instruction, base):
         'MUL'  : ['10011011000', '*'],
         'ORR'  : ['10101010000', '|'],
         'AND'  : ['10001010000', '&'],
-        'ADDI' : ['10010001000',  '+'],
+        'ADDI' : ['10010001000', '+'],
         'ADDS' : ['10101011000', '+'],
-        'ADDIS': ['10110001000',  '+'],
-        'SUBI' : ['11010001000',  '-'],
+        'ADDIS': ['10110001000', '+'],
+        'SUBI' : ['11010001000', '-'],
         'SUBS' : ['11101011000', '-'],
-        'SUBIS': ['11110001000',  '-'],
+        'SUBIS': ['11110001000', '-'],
         'LSL'  : ['11010011011', '<<'],
         'LSR'  : ['11010011010', '>>'],
         'CBZ'  : ['10110100000'],
@@ -102,6 +102,8 @@ def single_inst_parse(raw_instruction, base):
         'HI': ['01011', '>' ],
         'HS': ['00011', '>=']
     }
+
+    ex_table = {11: 0x7ff, 16: 0xffff, 21: 0x1fffff}
 
     # [31:0] == [MSB:LSB]
     machine_code = OPCODES[instruction_list[0]][0]
@@ -147,13 +149,24 @@ def single_inst_parse(raw_instruction, base):
     elif (instruction_list[0] == 'ADDI' or instruction_list[0] == 'SUBI' or
           instruction_list[0] == 'ADDIS' or instruction_list[0] == 'SUBIS'):  # I-Type
         # ADDI X2, X1, #2
-        immediate = int(''.join(filter(str.isdigit, instruction_list[3])))
+
         rn = int(''.join(filter(str.isdigit, instruction_list[2])))
         rd = int(''.join(filter(str.isdigit, instruction_list[1])))
-        print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
-              + OPCODES[instruction_list[0]][1] + ' ' + str(immediate))
 
-        machine_code += str(bin(immediate)[2:].zfill(11)) + str(bin(rn)[2:].zfill(5)) + str(bin(rd)[2:].zfill(5))
+        # Judge immediate if negative
+        immediate = int(''.join(filter(str.isdigit, instruction_list[3])))
+        print("raw_immi = " + str(immediate))
+        if re.match(".*[-][\d]*", instruction_list[3]):
+            print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
+              + OPCODES[instruction_list[0]][1] + ' (-' + str(immediate) + ')')
+            immediate = str(bin(-immediate & ex_table[11]))[2:]
+            print("2_immi = " + immediate)
+        else:
+            print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
+              + OPCODES[instruction_list[0]][1] + ' ' + str(immediate))
+            immediate = str(bin(immediate)[2:].zfill(11))
+
+        machine_code += immediate + str(bin(rn)[2:].zfill(5)) + str(bin(rd)[2:].zfill(5))
 
     elif (instruction_list[0] == 'LSL' or instruction_list[0] == 'LSR'): # LSL, LSR
         # LSL X10, X9, #3
@@ -173,35 +186,61 @@ def single_inst_parse(raw_instruction, base):
         machine_code += str(bin(rd)[2:].zfill(21))
 
     elif (instruction_list[0] == 'B' or instruction_list[0] == 'BL'): # B-Type
-        # BL 20
+        # BL #20
 
+        # Judge immediate if negative
+        
         br_address = int(''.join(filter(str.isdigit, instruction_list[1])))
-        if(instruction_list[0] == 'B') :
-            print('PC = PC + 1 + ' + str(br_address))
-        else: # BL
-            print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + str(br_address))
+        if re.match(".*[-][\d]*", instruction_list[1]):
+            if(instruction_list[0] == 'B') :
+                print('PC = PC + 1 + ' + ' (-' + str(br_address) + ')')
+            else: # BL
+                print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + '(-' + str(br_address) + ')')
+            br_address = str(bin(-br_address & ex_table[21]))[2:]
+        else:
+            if(instruction_list[0] == 'B') :
+                print('PC = PC + 1 + ' + str(br_address))
+            else : # BL
+                print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + str(br_address))
+            br_address = str(bin(br_address)[2:].zfill(21))
 
-        machine_code += str(bin(br_address)[2:].zfill(21))
+        machine_code += br_address
 
     elif (instruction_list[0] == 'CBZ'): # CB-Type
-        # CBZ X20, 20
+        # CBZ X20, #20
+
+        rt = int(''.join(filter(str.isdigit, instruction_list[1])))
 
         cond_br_address = int(''.join(filter(str.isdigit, instruction_list[2])))
-        rt = int(''.join(filter(str.isdigit, instruction_list[1])))
-        print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
-        print('else { PC++ }')
+        if re.match(".*[-][\d]*", instruction_list[2]):
+            print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + '(-' + str(cond_br_address) + ') }')
+            print('else { PC++ }')
+            cond_br_address = str(bin(-cond_br_address & ex_table[16]))[2:]
+        else:
+            print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
+            print('else { PC++ }')
+            cond_br_address = str(bin(cond_br_address)[2:].zfill(16))
 
-        machine_code += str(bin(cond_br_address)[2:].zfill(16)) + str(bin(rt)[2:].zfill(5))
+
+        machine_code += cond_br_address + str(bin(rt)[2:].zfill(5))
 
     elif (instruction_list[0] == 'B.'):  # CB-Type
-        # B.LT 20
+        # B.LT #20
+
+        rt = ''.join(BCOND[instruction_list[1]][0])
 
         cond_br_address = int(''.join(filter(str.isdigit, instruction_list[2])))
-        rt = ''.join(BCOND[instruction_list[1]][0])
-        print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
-        print('else { PC++ }')
+        if re.match(".*[-][\d]*", instruction_list[2]):
+            print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + '(-' + str(cond_br_address) + ') }')
+            print('else { PC++ }')
+            cond_br_address = str(bin(-cond_br_address & ex_table[16]))[2:]
+        else:
+            print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
+            print('else { PC++ }')
+            cond_br_address = str(bin(cond_br_address)[2:].zfill(16))
+
     
-        machine_code += str(bin(cond_br_address)[2:].zfill(16)) + rt
+        machine_code += cond_br_address + rt
     
     
     else:
