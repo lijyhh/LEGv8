@@ -26,7 +26,7 @@
 // Module
 module IF_tb;
 
-  parameter INST_FILE = `INST_MEM_TEST_FILE;
+  parameter INST_FILE = `TEST_INST_FILE;
   
   reg                         tb_clk     ;                
   reg                         tb_rst_n   ;             

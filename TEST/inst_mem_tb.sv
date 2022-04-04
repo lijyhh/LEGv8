@@ -26,7 +26,7 @@
 // Module
 module inst_mem_tb();
 
-  parameter PATH = `INST_MEM_TEST_FILE;
+  parameter PATH = `TEST_INST_FILE;
 
   reg                   tb_clk  ;
   reg  [`WORD-1:0]      tb_pc   ;

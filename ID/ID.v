@@ -25,7 +25,7 @@
 //
 // Module
 module ID #( 
-  parameter PATH = `REG_FILE ) (
+  parameter PATH = `TEST_REG_FILE ) (
   clk      ,            
   rst_n    ,        
   inst     ,       // Input instruction to be decoded

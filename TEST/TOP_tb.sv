@@ -24,14 +24,28 @@
 
 //
 // Module
+
+`define FACT 
+//`define SORT 
+
 module TOP_tb();
 
   reg                 tb_clk   ;                      
   reg                 tb_rst_n ;               
 
-  parameter INST_FILE = `INST_FILE;
-  parameter REG_FILE  = `REG_FILE ; 
-  parameter DATA_FILE = `DATA_FILE; 
+  `ifdef FACT
+    parameter INST_FILE = `FACT_INST_FILE;
+    parameter REG_FILE  = `FACT_REG_FILE ; 
+    parameter DATA_FILE = `FACT_DATA_FILE; 
+  `elsif SORT
+    parameter INST_FILE = `SORT_INST_FILE;
+    parameter REG_FILE  = `SORT_REG_FILE ; 
+    parameter DATA_FILE = `SORT_DATA_FILE; 
+  `else
+    parameter INST_FILE = `TEST_INST_FILE;
+    parameter REG_FILE  = `TEST_REG_FILE ; 
+    parameter DATA_FILE = `TEST_DATA_FILE; 
+  `endif
 
   task delay;
     input [31:0] num;
@@ -62,15 +76,23 @@ module TOP_tb();
   TOP #( 
   .INST_FILE( INST_FILE ),
   .REG_FILE ( REG_FILE  ),
-  .DATA_FILE( DATA_FILE )) TOP(
+  .DATA_FILE( DATA_FILE )) TOP_TB(
   .clk  ( tb_clk   )  ,              
   .rst_n( tb_rst_n )            
   );
   
+  wire [`WORD - 1 : 0]         tb_r_data;
+
+  assign tb_r_data = TOP_TB.data_path.WB.w_data;
+
   initial begin
     `TB_BEGIN
-    delay(3);
-
+    delay(2);
+    $display("++++++++++++++++++++++++++++++++++++++++++");
+    $monitor("%0d, tb_r_data = %0d", $time, tb_r_data);
+    //assert( tb_r_data == 6 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    //else $error("tb_r_data = %0d", tb_r_data);
+    delay(30);
     `TB_END
     $finish;
   end

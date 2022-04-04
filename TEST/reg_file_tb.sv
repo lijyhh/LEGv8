@@ -26,7 +26,7 @@
 // Module
 module reg_file_tb();
   
-  parameter PATH = `REG_MEM_TEST_FILE;
+  parameter PATH = `TEST_REG_FILE;
 
   reg  tb_clk, tb_rst_n;
   reg  tb_RegWrite;

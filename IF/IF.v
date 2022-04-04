@@ -25,7 +25,7 @@
 //
 // Module
 module IF #( 
-  parameter PATH=`INST_FILE )(
+  parameter PATH=`TEST_INST_FILE )(
   clk         ,             
   rst_n       , 
   ALU_res     ,    // Result of ADD ALU in EX, i.e. address of branch     

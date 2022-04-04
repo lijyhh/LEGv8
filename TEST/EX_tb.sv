@@ -121,7 +121,7 @@ module EX_tb();
     tb_SregUp    = 'd0; 
     tb_pc        = 'd200; 
     #`CYCLE;
-    my_assert(28, 0, 'h22C240A70, 1);
+    my_assert(28, 0, 64'h22C240A70, 1);
 
     // SUB X11, X20, X10
     tb_r_data1   = 'd20;  
@@ -134,7 +134,7 @@ module EX_tb();
     tb_SregUp    = 'd0; 
     tb_pc        = 'd200; 
     #`CYCLE;
-    my_assert(0, 0, 'h32C280AF4, 2);
+    my_assert(0, 0, 64'h32C280AF4, 2);
 
     // STUR X11, [X22, #96]
     tb_r_data1   = 'd22;  
@@ -160,7 +160,7 @@ module EX_tb();
     tb_SregUp    = 'd1; 
     tb_pc        = 'd200; 
     #`CYCLE;
-    my_assert('hFFFFFFFFFFFFFFFB, 0, 180, 4);
+    my_assert(64'hFFFFFFFFFFFFFFFB, 0, 180, 4);
 
     // CBNZ X9, 8
     tb_r_data1   = 'd8;  
@@ -173,7 +173,7 @@ module EX_tb();
     tb_SregUp    = 'd1; 
     tb_pc        = 'd200; 
     #`CYCLE;
-    my_assert(8, 1, 'hE8, 5);
+    my_assert(8, 1, 64'hE8, 5);
 
     // B 64
     tb_r_data1   = 'd2;  

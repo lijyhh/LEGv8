@@ -25,7 +25,7 @@
 //
 // Module
 module reg_file #( 
-  parameter PATH = `REG_FILE )(
+  parameter PATH = `TEST_REG_FILE )(
   clk      ,            
   rst_n    ,        
   r_reg1   ,     // Read register 1          
@@ -68,12 +68,12 @@ module reg_file #(
   // Read data from register memory
   always @( posedge clk or negedge rst_n ) begin
     if( ~rst_n ) begin
-      r_data1 <= 'b0;
-      r_data2 <= 'b0;
+      r_data1 <= #1 'b0;
+      r_data2 <= #1 'b0;
     end
     else begin
-      r_data1 <= reg_memory[r_reg1];
-      r_data2 <= reg_memory[r_reg2];
+      r_data1 <= #1 reg_memory[r_reg1];
+      r_data2 <= #1 reg_memory[r_reg2];
     end
   end  
   */
@@ -83,7 +83,7 @@ module reg_file #(
 
   always @( posedge clk or negedge rst_n ) begin
     if( rst_n && RegWrite ) begin
-      reg_memory[w_reg] <= w_data;
+      reg_memory[w_reg] <= #1 w_data;
     end
   end      
 

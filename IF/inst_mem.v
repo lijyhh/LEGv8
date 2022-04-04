@@ -30,7 +30,7 @@
 //
 // Module
 module inst_mem #( 
-  parameter PATH = `INST_FILE, // instruction file
+  parameter PATH = `TEST_INST_FILE, // instruction file
   parameter SIZE = 1024)( // size of instruction mem
   //r_clk       ,         
   //rst_n       ,     
@@ -63,10 +63,10 @@ module inst_mem #(
   // Load instruction
   always @( posedge r_clk or negedge rst_n ) begin
     if( ~rst_n ) begin
-      inst <= 'b0;
+      inst <= #1 'b0;
     end
     else begin
-      inst <= inst_memory[pc / 4]; // Size of instruction is 4 Bytes
+      inst <= #1 inst_memory[pc / 4]; // Size of instruction is 4 Bytes
     end
   end      
   */

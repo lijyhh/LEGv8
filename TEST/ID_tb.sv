@@ -26,7 +26,7 @@
 // Module
 module ID_tb();
 
-  parameter REG_FILE = `REG_MEM_TEST_FILE;
+  parameter REG_FILE = `TEST_REG_FILE;
 
   reg                             tb_clk     ;                
   reg                             tb_rst_n   ;             
