@@ -207,16 +207,17 @@ def single_inst_parse(raw_instruction, base):
     else:
         raise RuntimeError('OPCODE (' + instruction_list[0] + ') not supported')
     
+    hex_machine_code = str(hex(int(machine_code, 2)))[2:]
     # Output the machine code representation of the input
     print('\n------- Machine Code (' + str(len(machine_code)) + '-bits) -------')
     print('BINARY : ' + machine_code)
-    print('HEX    : ' + str(hex(int(machine_code, 2)))[2:])
+    print('HEX    : ' + hex_machine_code)
     print('')
 
-    if base == 'bin' or 'BIN':
+    if base in ('bin', 'BIN'):
         return machine_code
     elif base == 'hex' or 'HEX':
-        return str(hex(int(machine_code, 2)))[2:]
+        return hex_machine_code
 
 
 def read_inst(file):
@@ -271,4 +272,4 @@ if __name__ == '__main__':
 
     src_file2 = './data/bubble_sort/bubble_sort.asm'
     obj_file2 = './data/bubble_sort/inst_mem.txt'
-    batch_process_insts(src_file2, obj_file2, 'HEX')
+    batch_process_insts(src_file2, obj_file2, 'hex')
