@@ -13,18 +13,29 @@
 //*******************************
 // Definition of file path
 //*******************************
+// Factorial
 // Instruction memory file
-`define INST_FILE ""
+`define FACT_INST_FILE "data/factorial/inst_mem.txt"
 // Register file
-`define REG_FILE  ""
+`define FACT_REG_FILE  "data/factorial/reg_mem.txt"
 // Data file
-`define DATA_FILE  ""
+`define FACT_DATA_FILE  "data/factorial/data_mem.txt"
+
+// Bubble sort
+// Instruction memory file
+`define SORT_INST_FILE "data/bubble_sort/inst_mem.txt"
+// Register file
+`define SORT_REG_FILE  "data/bubble_sort/reg_mem.txt"
+// Data file
+`define SORT_DATA_FILE  "data/bubble_sort/data_mem.txt"
+
+// Test
 // Instruction memory for test
-`define INST_MEM_TEST_FILE "data/inst_mem_test.txt"
+`define INST_MEM_TEST_FILE "data/test/inst_mem.txt"
 // Register memory for test
-`define REG_MEM_TEST_FILE "data/reg_mem_test.txt"
+`define REG_MEM_TEST_FILE "data/test/reg_mem.txt"
 // Data memory for test
-`define DATA_MEM_TEST_FILE "data/data_mem_test.txt"
+`define DATA_MEM_TEST_FILE "data/test/data_mem.txt"
 
 //*******************************
 // Definition of instruction opcode
