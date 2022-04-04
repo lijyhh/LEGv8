@@ -27,11 +27,11 @@
 module control(
   opcode   ,          // Opcode from instruction, 11 bits     
   Reg2Loc  ,          // Select register file source register 2, 1 bit, assert when `STUR、`CBZ、`CBNZ、`BR、`MOVK valid
-  RegWrite ,          // Flag of register file to write back, 1 bit, assert when `ADD, `SUB, `AND, `ORR, `LSL, `LSR, `ADDI, `ANDI, `EORI, `ORRI, `SUBI, `ADDIS, `ANDIS, `SUBS, `ADDIS, `ANDIS, `SUBS, `LDUR, `BL, `MOV, `MOVZ, `MOVK valid
+  RegWrite ,          // Flag of register file to write back, 1 bit, assert when `ADD, `SUB, `AND, `ORR, `LSL, `LSR, `ADDI, `ANDI, `EORI, `ORRI, `SUBI, `ADDIS, `ANDIS, `SUBS, `ADDIS, `ANDIS, `SUBS, `LDUR, `BL, `MOVZ, `MOVK valid
   WRegLoc  ,          // Flag of register file to select write register, 1 bit, assert when `BL valid
-  ALUSrc   ,          // Flag of ALU to select source data 2, 1 bit, assert when `LSL, `LSR, `ADDI, `ANDI, `EORI, `ORRI, `SUBI, `ADDIS, `ANDIS, `SUBS, `LDUR, `STUR, `MOV, `MOVZ, `MOVK valid
+  ALUSrc   ,          // Flag of ALU to select source data 2, 1 bit, assert when `LSL, `LSR, `ADDI, `ANDI, `EORI, `ORRI, `SUBI, `ADDIS, `ANDIS, `SUBS, `LDUR, `STUR, `MOVZ, `MOVK valid
   ALUOp    ,          // ALU op for ALU control unit, 2 bits, assert time please see the code 
-  SregUp   ,          // Update status register, 1bit, assert when `ADDS, `ANDS, `SUBS, `ADDIS, `ANDIS, `SUBS, `CMP, `CBZ, `CBNZ valid
+  SregUp   ,          // Update status register, 1bit, assert when `ADDS, `ANDS, `SUBS, `ADDIS, `ANDIS, `SUBS, `CBZ, `CBNZ valid
   BranchOp ,          // Branch op for EX to select PC source, 3 bits, assert time please see the code
   MemRead  ,          // Flag of memory read, 1 bit, assert when `LDUR valid
   MemWrite ,          // Flag of memory write, 1 bit, assert when `STUR valid
@@ -94,9 +94,6 @@ module control(
         ALUSrc   = 'b1;
         SregUp   = 'b1;
       end
-      `CMP: begin
-        SregUp   = 'b1;
-      end
       `LDUR: begin
         RegWrite = 'b1;
         ALUSrc   = 'b1;
@@ -134,7 +131,7 @@ module control(
         Reg2Loc  = 'b1;
         BranchOp = `BCOND_OP_ALU;
       end
-      `MOV, `MOVZ: begin
+      `MOVZ: begin
         RegWrite = 'b1;
         ALUSrc   = 'b1;
       end

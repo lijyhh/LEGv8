@@ -45,15 +45,13 @@ module sign_extend(
       `LSL, `LSR:
         ex_data = {{(`WORD-6){inst[15]}}, inst[15:10]};
       `ADDI, `ANDI, `EORI, `ORRI, `SUBI, `SUBIS:
-        ex_data = {{(`WORD-12){inst[21]}}, inst[21:10]};
+        ex_data = {{(`WORD-11){inst[20]}}, inst[20:10]};
       `LDUR, `STUR:
         ex_data = {{(`WORD-9){inst[20]}}, inst[20:12]};
       `CBZ, `CBNZ, `BCOND:
-        ex_data = {{(`WORD-19){inst[23]}}, inst[23:5]};
+        ex_data = {{(`WORD-16){inst[20]}}, inst[20:5]};
       `B, `BL:
-        ex_data = {{(`WORD-26){inst[25]}}, inst[25:0]};
-      `MOV: 
-        ex_data = {`WORD{1'b0}};
+        ex_data = {{(`WORD-21){inst[20]}}, inst[20:0]};
       `MOVK, `MOVZ:
         ex_data = {{(`WORD-16){1'b0}}, inst[20:5]};
       default:
