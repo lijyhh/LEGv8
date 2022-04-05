@@ -78,7 +78,7 @@ module control(
     MemWrite = 'b0;
     MemtoReg = 'b0;
     casez( opcode )
-      `ADD, `SUB, `AND, `ORR: begin
+      `ADD, `SUB, `AND, `ORR, `MUL: begin
         RegWrite = 'b1;
       end
       `LSL, `LSR, `ADDI, `ANDI, `EORI, `ORRI, `SUBI: begin
@@ -151,7 +151,7 @@ module control(
       `CBZ: begin
         ALUOp = 'b01;
       end
-      `ADD, `SUB, `AND, `ORR, `LSL, `LSR, `SUBS, `ADDS, `BR, `ADDI, `SUBI, `SUBIS: begin
+      `ADD, `SUB, `MUL, `AND, `ORR, `LSL, `LSR, `SUBS, `ADDS, `BR, `ADDI, `SUBI, `SUBIS: begin
         ALUOp = 'b10;
       end
       default: begin
