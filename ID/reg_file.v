@@ -82,7 +82,7 @@ module reg_file #(
   assign r_data2 = ~rst_n ? 0 : reg_memory[r_reg2];
 
   always @( posedge clk or negedge rst_n ) begin
-    if( rst_n && RegWrite ) begin
+    if( rst_n && RegWrite && w_reg != 'd31 ) begin
       reg_memory[w_reg] <= #1 w_data;
     end
   end      
