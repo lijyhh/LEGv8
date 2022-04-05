@@ -267,11 +267,11 @@ def read_inst(file):
         # Remove comment
         line = line.replace('\n', '')
         tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9\W]*[\W]*", '', line)
-        if tmp == '':
+        if tmp == '' or tmp == ' ':
             pass
         else:
             lines.append(tmp)
-    # print(lines)
+    print(lines)
     fp.close()
 
     return lines
