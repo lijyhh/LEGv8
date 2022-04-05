@@ -2,3 +2,5 @@
 work/
 transcript
 *.rc
+*.fsdb
+*.vcd

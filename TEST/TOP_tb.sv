@@ -25,27 +25,27 @@
 //
 // Module
 
-`define FACT 
-//`define SORT 
+//`define FACT 
+`define SORT 
 
 module TOP_tb();
 
   reg                 tb_clk   ;                      
   reg                 tb_rst_n ;               
 
-  `ifdef FACT
+`ifdef FACT
     parameter INST_FILE = `FACT_INST_FILE;
     parameter REG_FILE  = `FACT_REG_FILE ; 
     parameter DATA_FILE = `FACT_DATA_FILE; 
-  `elsif SORT
+`elsif SORT
     parameter INST_FILE = `SORT_INST_FILE;
     parameter REG_FILE  = `SORT_REG_FILE ; 
     parameter DATA_FILE = `SORT_DATA_FILE; 
-  `else
+`else
     parameter INST_FILE = `TEST_INST_FILE;
     parameter REG_FILE  = `TEST_REG_FILE ; 
     parameter DATA_FILE = `TEST_DATA_FILE; 
-  `endif
+`endif
 
   task delay;
     input [31:0] num;
@@ -68,11 +68,6 @@ module TOP_tb();
     tb_rst_n = 1;
   end
 
-  initial begin
-    $dumpfile(" TOP_tb.vcd ");
-    $dumpvars();
-  end
-
   TOP #( 
   .INST_FILE( INST_FILE ),
   .REG_FILE ( REG_FILE  ),
@@ -81,21 +76,45 @@ module TOP_tb();
   .rst_n( tb_rst_n )            
   );
   
-  wire [`WORD - 1 : 0]         tb_r_data;
-
-  assign tb_r_data = TOP_TB.data_path.WB.w_data;
-
   initial begin
     `TB_BEGIN
-    delay(2);
-    $display("++++++++++++++++++++++++++++++++++++++++++");
-    $monitor("%0d, tb_r_data = %0d", $time, tb_r_data);
-    //assert( tb_r_data == 6 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    //else $error("tb_r_data = %0d", tb_r_data);
-    delay(30);
+    delay(500);
     `TB_END
     $finish;
   end
+
+`ifdef FACT
+  
+  initial begin
+    $dumpfile(" TOP_tb_FACT.vcd ");
+    $dumpvars();
+  end
+
+  wire [`WORD - 1 : 0]         tb_r_data;
+  assign tb_r_data = TOP_TB.data_path.WB.w_data;
+
+  always @(negedge tb_clk) begin
+    // Test 12!
+    //if( tb_r_data == 479001600 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    // Test 6!
+    if( tb_r_data == 720 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+  end
+
+`elsif SORT
+  
+  initial begin
+    $dumpfile(" TOP_tb_SORT.vcd ");
+    $dumpvars();
+  end
+
+  /*
+  always@(negedge tb_clk) begin
+    if() 
+      $strobe("%0d, !!TEST SUCCESS!!", $time);
+  end
+  */
+
+`endif
 
 
 endmodule
