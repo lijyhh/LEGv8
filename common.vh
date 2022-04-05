@@ -54,7 +54,6 @@
 `define BCOND   11'b01010100???
 `define CBZ     11'b10110100???
 `define CBNZ    11'b10110101???
-`define CMP     11'b01001011011
 `define CMPI    11'b1100001110?
 `define DIV     11'b10011010110
 `define EOR     11'b11001010000
@@ -70,7 +69,6 @@
 `define LDURSW  11'b10111000100
 `define LSL     11'b11010011011
 `define LSR     11'b11010011010
-`define MOV     11'b10010011110
 `define MOVK    11'b111100101??
 `define MOVZ    11'b110100101??
 `define MUL     11'b10011011000
