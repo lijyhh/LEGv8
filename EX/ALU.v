@@ -100,6 +100,9 @@ module ALU(
           Overflow = 1'b1;
         end
       end
+      `ALU_MUL: begin
+        ALUTmp = a * b;
+      end
       `ALU_PASS: begin
         ALUTmp = b;
       end

@@ -60,7 +60,7 @@ module ALU_control(
         ALUCtl = `ALU_PASS;
       end
       2'b10: begin
-        case( opcode )
+        casez( opcode )
           `ADD, `ADDI, `ADDIS, `ADDS: begin // ALU add
             ALUCtl = `ALU_ADD;
           end
@@ -81,6 +81,9 @@ module ALU_control(
           end
           `ORR, `ORRI: begin
             ALUCtl = `ALU_OR;
+          end
+          `MUL: begin
+            ALUCtl = `ALU_MUL;
           end
         endcase
       end
