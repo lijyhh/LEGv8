@@ -271,7 +271,7 @@ def read_inst(file):
             pass
         else:
             lines.append(tmp)
-    print(lines)
+    # print(lines)
     fp.close()
 
     return lines
