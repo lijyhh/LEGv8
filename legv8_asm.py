@@ -309,6 +309,10 @@ if __name__ == '__main__':
     obj_file1 = './data/factorial/inst_mem.txt'
     batch_process_insts(src_file1, obj_file1, 'HEX')
 
-    src_file2 = './data/bubble_sort/bubble_sort.asm'
-    obj_file2 = './data/bubble_sort/inst_mem.txt'
+    src_file2 = './data/bubble_sort/0/bubble_sort.asm'
+    obj_file2 = './data/bubble_sort/0/inst_mem.txt'
     batch_process_insts(src_file2, obj_file2, 'hex')
+
+    src_file3 = './data/bubble_sort/1/bubble_sort.asm'
+    obj_file3 = './data/bubble_sort/1/inst_mem.txt'
+    batch_process_insts(src_file3, obj_file3, 'hex')

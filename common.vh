@@ -21,13 +21,21 @@
 // Data file
 `define FACT_DATA_FILE  "data/factorial/data_mem.txt"
 
-// Bubble sort
+// Bubble sort test 0
 // Instruction memory file
-`define SORT_INST_FILE "data/bubble_sort/inst_mem.txt"
+`define SORT_INST_FILE "data/bubble_sort/0/inst_mem.txt"
 // Register file
-`define SORT_REG_FILE  "data/bubble_sort/reg_mem.txt"
+`define SORT_REG_FILE  "data/bubble_sort/0/reg_mem.txt"
 // Data file
-`define SORT_DATA_FILE  "data/bubble_sort/data_mem.txt"
+`define SORT_DATA_FILE  "data/bubble_sort/0/data_mem.txt"
+
+// Bubble sort test 1
+// Instruction memory file
+`define SORT_INST_FILE_1 "data/bubble_sort/1/inst_mem.txt"
+// Register file
+`define SORT_REG_FILE_1  "data/bubble_sort/1/reg_mem.txt"
+// Data file
+`define SORT_DATA_FILE_1  "data/bubble_sort/1/data_mem.txt"
 
 // Test
 // Instruction memory for test
