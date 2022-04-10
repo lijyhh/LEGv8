@@ -155,12 +155,10 @@ def single_inst_parse(raw_instruction, base):
 
         # Judge immediate if negative
         immediate = int(''.join(filter(str.isdigit, instruction_list[3])))
-        print("raw_immi = " + str(immediate))
         if re.match(".*[-][\d]*", instruction_list[3]):
             print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
               + OPCODES[instruction_list[0]][1] + ' (-' + str(immediate) + ')')
             immediate = str(bin(-immediate & ex_table[11]))[2:]
-            print("2_immi = " + immediate)
         else:
             print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
               + OPCODES[instruction_list[0]][1] + ' ' + str(immediate))
@@ -302,7 +300,6 @@ if __name__ == '__main__':
 
     # Get Instruction from keyboard and display
     # single_inst_from_keyboard()
-
 
     # Process instructions in batch mode
     src_file1 = './data/factorial/factorial.asm'
