@@ -124,7 +124,7 @@ module control(
       `BL: begin
         RegWrite = 'b1;
         BranchOp = `BCOND_OP_BRANCH;
-        WRegLoc  = 'b1; // Link regisyter
+        WRegLoc  = 'b1; // Link register
         MemtoReg = 'b10;
       end
       `BR: begin

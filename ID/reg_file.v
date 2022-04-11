@@ -64,20 +64,6 @@ module reg_file #(
   reg    [`WORD - 1 : 0]    reg_memory[31:0];
   initial $readmemh(PATH, reg_memory);
 
-  /*
-  // Read data from register memory
-  always @( posedge clk or negedge rst_n ) begin
-    if( ~rst_n ) begin
-      r_data1 <= 'b0;
-      r_data2 <= 'b0;
-    end
-    else begin
-      r_data1 <= reg_memory[r_reg1];
-      r_data2 <= reg_memory[r_reg2];
-    end
-  end  
-  */
-
   assign r_data1 = reg_memory[r_reg1];
   assign r_data2 = reg_memory[r_reg2];
 

@@ -71,17 +71,5 @@ module status_reg(
     end
   end      
 
-
-
-
-
-
-
-
-
-
-
-
-
 endmodule
 

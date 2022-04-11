@@ -17,9 +17,7 @@
 //*@Function : Memory of instruction. 
 //
 //*@V0.0     : Initial.
-//*@V0.1     : Modify sequential logic to combinational logic. Because the
-//  instruction memory is an external module, we dont care it operation
-//  now for a simple LEGV8 instruction set.
+//*@V0.1     : 
 //
 //******************************************************************
 
@@ -32,8 +30,6 @@
 module inst_mem #( 
   parameter PATH = `TEST_INST_FILE, // instruction file
   parameter SIZE = 1024)( // size of instruction mem
-  //r_clk       ,         
-  //rst_n       ,     
   pc          ,  
   inst             
   );
@@ -41,13 +37,9 @@ module inst_mem #(
   //* Input and output ports
   //===========================================================
   //
-  //input                           r_clk      ;             
-  //input                           rst_n      ;          
   input    [`WORD - 1 : 0]        pc         ;                  
   output   [`INST_SIZE - 1 : 0]   inst       ;                
 
-  //wire                            r_clk      ;             
-  //wire                            rst_n      ;          
   wire     [`WORD - 1 : 0]        pc         ;                  
   wire     [`INST_SIZE - 1 : 0]   inst       ;                
 
@@ -58,18 +50,6 @@ module inst_mem #(
   initial $readmemh( PATH, inst_memory );
 
   assign inst = inst_memory[pc / 4];
-
-  /*
-  // Load instruction
-  always @( posedge r_clk or negedge rst_n ) begin
-    if( ~rst_n ) begin
-      inst <= 'b0;
-    end
-    else begin
-      inst <= inst_memory[pc / 4]; // Size of instruction is 4 Bytes
-    end
-  end      
-  */
 
 endmodule
 

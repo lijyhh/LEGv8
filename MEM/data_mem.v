@@ -6,7 +6,7 @@
 //
 //*@File Type: verilog
 //
-//*@Version  : 0.0
+//*@Version  : 0.1
 //
 //*@Author   : Zehua Dong, SIGS
 //
@@ -17,9 +17,7 @@
 //*@Function : Realize data memory. 
 //
 //*@V0.0     : Initial design with separate read and write clock.
-//*@V0.1     : We dont care data memory design( external module for us ), 
-//  just use combinational logic to read and write use system clock named 'clk'
-//  in this module for test.
+//*@V0.1     : 
 //
 //******************************************************************
 
@@ -32,8 +30,6 @@
 module data_mem #( 
   parameter PATH = `TEST_DATA_FILE, 
   parameter SIZE = 1024) (
-  //r_clk     ,              
-  //w_clk     ,              
   clk       ,              
   rst_n     ,          
   MemRead   ,     // Signal of reading data from memory
@@ -47,8 +43,6 @@ module data_mem #(
   //* Input and output ports
   //===========================================================
   //
-  //input                           r_clk   ;                  
-  //input                           w_clk   ;                  
   input                           clk     ;                  
   input                           rst_n   ;               
   input                           MemRead ;                   
@@ -57,8 +51,6 @@ module data_mem #(
   input  [`WORD - 1 : 0]          w_data  ;                
   output [`WORD - 1 : 0]          r_data  ;                   
 
-  //wire                            r_clk   ;                  
-  //wire                            w_clk   ;                  
   wire                            clk     ;                  
   wire                            rst_n   ;               
   wire                            MemRead ;                   
@@ -72,17 +64,6 @@ module data_mem #(
   // Initial memory
   initial $readmemh(PATH, data_memory);
 
-  /*
-  // Read by sequential logic 
-  always @( posedge r_clk or negedge rst_n ) begin
-    if( ~rst_n ) begin
-      r_data <= 'b0;
-    end
-    else if( MemRead ) begin
-      r_data <= data_memory[addr/8];
-    end
-  end   
-  */
   // Read by combinational logic
   assign r_data = ( MemRead ? data_memory[addr/8] : 'b0 );
 
