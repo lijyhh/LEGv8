@@ -63,10 +63,10 @@ module inst_mem #(
   // Load instruction
   always @( posedge r_clk or negedge rst_n ) begin
     if( ~rst_n ) begin
-      inst <= #1 'b0;
+      inst <= 'b0;
     end
     else begin
-      inst <= #1 inst_memory[pc / 4]; // Size of instruction is 4 Bytes
+      inst <= inst_memory[pc / 4]; // Size of instruction is 4 Bytes
     end
   end      
   */

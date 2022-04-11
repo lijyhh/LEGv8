@@ -64,10 +64,10 @@ module status_reg(
 
   always @( posedge clk or negedge rst_n ) begin
     if( ~rst_n ) begin
-      {N, Z, V, C} <= #1 4'b0000;
+      {N, Z, V, C} <= 4'b0000;
     end
     else if( SregUp ) begin
-      {N, Z, V, C} <= #1 {Negative, Zero, Overflow, Ci};
+      {N, Z, V, C} <= {Negative, Zero, Overflow, Ci};
     end
   end      
 

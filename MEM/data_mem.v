@@ -76,10 +76,10 @@ module data_mem #(
   // Read by sequential logic 
   always @( posedge r_clk or negedge rst_n ) begin
     if( ~rst_n ) begin
-      r_data <= #1 'b0;
+      r_data <= 'b0;
     end
     else if( MemRead ) begin
-      r_data <= #1 data_memory[addr/8];
+      r_data <= data_memory[addr/8];
     end
   end   
   */
@@ -89,7 +89,7 @@ module data_mem #(
   // Write data
   always @( posedge clk or negedge rst_n ) begin
     if( rst_n && MemWrite ) begin
-      data_memory[addr/8] <= #1 w_data;
+      data_memory[addr/8] <= w_data;
     end
   end      
 
