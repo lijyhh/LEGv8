@@ -45,7 +45,7 @@ module IF #(
   input  [`WORD - 1 : 0]      ALU_res ;                   
   input  [`WORD - 1 : 0]      ALUOut  ;                   
   input  [1:0]                PCSrc   ;                   
-  output [`WORD - 1 : 0]      pc      ;  
+  input  [`WORD - 1 : 0]      pc      ;  
   output [`WORD - 1 : 0]      pc_incr ;   
   output [`INST_SIZE - 1 : 0] inst    ;
 
