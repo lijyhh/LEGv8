@@ -68,8 +68,8 @@ module IF #(
   wire [`WORD - 1 : 0] pc_new;
 
 
-  assign pc_incr = ~rst_n ? 0 : pc + 'd4;
-  assign pc = ~rst_n ? 0 : pc_c;
+  assign pc_incr = pc + 'd4;
+  assign pc = pc_c;
 
   // Select PC source
   mux4 #( 

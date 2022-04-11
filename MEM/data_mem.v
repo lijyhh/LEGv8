@@ -84,7 +84,7 @@ module data_mem #(
   end   
   */
   // Read by combinational logic
-  assign r_data = ~rst_n ? 'b0 : ( MemRead ? data_memory[addr/8] : 'b0 );
+  assign r_data = ( MemRead ? data_memory[addr/8] : 'b0 );
 
   // Write data
   always @( posedge clk or negedge rst_n ) begin

@@ -25,9 +25,9 @@
 //
 // Module
 
-//`define FACT 
+`define FACT 
 //`define SORT 
-`define SORT_1 
+//`define SORT_1 
 
 module TOP_tb();
 

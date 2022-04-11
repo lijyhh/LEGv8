@@ -73,12 +73,13 @@ module IF_tb;
     tb_PCSrc = 0;
     tb_ALU_res = 0;
     tb_ALUOut = 0;
-    repeat(3) @(posedge tb_clk) #1;
+    repeat(2) @(posedge tb_clk) #1;
     
     tb_PCSrc = 'b00;  // Select PC + 4
     tb_ALU_res = 124; // Instruction is 31
     tb_ALUOut = 60;   // Instruction is 15
-    #`CYCLE assert(tb_inst == 2) else $error("[0] tb_inst = %d", tb_inst);
+    #1;
+    #`CYCLE assert(tb_inst == 1) else $error("[0] tb_inst = %d", tb_inst);
     
     tb_PCSrc = 'b01;  
     #`CYCLE assert(tb_inst == 31) else $error("[1] tb_inst = %d", tb_inst);
