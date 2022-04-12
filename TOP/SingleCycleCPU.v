@@ -15,8 +15,8 @@
 //*@Date     : 2022/3/30 16:07:50
 //
 //*@Function : 
-//*V0.0      : Single cycle CPU module of single cycle LEGv8 instruction set. 
-//*V0.1      : Remove instrction memory and data memory from CPU.
+//*@V0.0     : Single cycle CPU module of single cycle LEGv8 instruction set. 
+//*@V0.1     : Remove instrction memory and data memory from CPU.
 //
 //******************************************************************
 
@@ -26,20 +26,40 @@
 
 //
 // Module
-module SingleCycleCPU #( 
-  parameter INST_FILE = `TEST_INST_FILE,
-  parameter REG_FILE  = `TEST_REG_FILE ,
-  parameter DATA_FILE = `TEST_DATA_FILE) (
-  clk    ,              
-  rst_n            
+module SingleCycleCPU(
+  clk     ,              
+  rst_n   ,         
+  IDB     ,  // Instruction data bus
+  IAB     ,  // Instruction address bus
+  DDB     ,  // Data data bus
+  DAB     ,  // Data address bus
+  CB         // Control bus
   );
 
-  input                           clk  ;  
-  input                           rst_n;                
+  //===========================================================
+  //* Input and output ports
+  //===========================================================
+  //
+  input                           clk     ;  
+  input                           rst_n   ;                
+  input   [`INST_SIZE - 1 : 0]    IDB     ;
+  inout   [`WORD - 1 : 0]         DDB     ;
+  output  [`WORD - 1 : 0]         IAB     ;
+  output  [`WORD - 1 : 0]         DAB     ;
+  output  [1 : 0]                 CB      ;
 
-  wire                            clk  ; 
-  wire                            rst_n;                
+  wire                            clk     ; 
+  wire                            rst_n   ;               
+  wire    [`INST_SIZE - 1 : 0]    IDB     ;
+  wire    [`WORD - 1 : 0]         DDB     ;
+  wire    [`WORD - 1 : 0]         IAB     ;                
+  wire    [`WORD - 1 : 0]         DAB     ;                
+  wire    [1 : 0]                 CB      ;                
 
+  //===========================================================
+  //* Internal signals
+  //===========================================================
+  //
   wire    [10:0]                  opcode  ;                   
   wire                            Reg2Loc ;                
   wire                            RegWrite;                
@@ -50,7 +70,16 @@ module SingleCycleCPU #(
   wire    [02:0]                  BranchOp;                
   wire                            MemRead ;                
   wire                            MemWrite;                
-  wire    [01: 0]                 MemtoReg;                
+  wire    [01: 0]                 MemtoReg; 
+
+  wire    [`WORD - 1 : 0]         w_data  ;
+  wire    [`WORD - 1 : 0]         r_data  ;
+
+  assign DDB = ( MemWrite && ~MemRead ) ? w_data : 'bz;
+  assign r_data = ( ~MemWrite && MemRead ) ? DDB : 'bz;
+
+  assign opcode = IDB[31:21];
+  assign CB = {MemWrite, MemRead};
 
   control control_path(
   .opcode  ( opcode   ) ,          // Opcode from instruction, 11 bits     
@@ -66,10 +95,7 @@ module SingleCycleCPU #(
   .MemtoReg( MemtoReg )            // Flag of MUX in WB to select source data, 1 bit
   );
 
-  datapath #( 
-  .INST_FILE( INST_FILE ),
-  .REG_FILE ( REG_FILE  ),
-  .DATA_FILE( DATA_FILE )) data_path(
+  datapath data_path(
   .clk      ( clk       ),            
   .rst_n    ( rst_n     ),        
   .RegWrite ( RegWrite  ),
@@ -82,7 +108,11 @@ module SingleCycleCPU #(
   .MemRead  ( MemRead   ),
   .MemWrite ( MemWrite  ),
   .MemtoReg ( MemtoReg  ),
-  .opcode   ( opcode    )
+  .inst     ( IDB       ),
+  .r_data   ( r_data    ),
+  .pc       ( IAB       ),
+  .ALUOut   ( DAB       ),
+  .m_data   ( w_data    )
   );
 
 endmodule

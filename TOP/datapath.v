@@ -24,10 +24,7 @@
 
 //
 // Module
-module datapath #( 
-  parameter INST_FILE = `TEST_INST_FILE,
-  parameter REG_FILE  = `TEST_REG_FILE ,
-  parameter DATA_FILE = `TEST_DATA_FILE) (
+module datapath( 
   clk      ,            
   rst_n    ,        
   RegWrite ,
@@ -40,7 +37,11 @@ module datapath #(
   MemRead  ,
   MemWrite ,
   MemtoReg ,
-  opcode 
+  inst     ,    
+  r_data   ,
+  pc       ,
+  ALUOut   ,
+  m_data        // Data to be written into data memory
   );
 
   //===========================================================
@@ -59,7 +60,11 @@ module datapath #(
   input                           MemRead  ;
   input                           MemWrite ;
   input    [01: 0]                MemtoReg ;
-  output   [10: 0]                opcode   ;
+  input    [`INST_SIZE - 1 : 0]   inst     ;
+  input    [`WORD - 1 : 0]        r_data   ;
+  output   [`WORD - 1 : 0]        pc       ;
+  output   [`WORD - 1 : 0]        ALUOut   ;
+  output   [`WORD - 1 : 0]        m_data   ;
 
   wire                            clk      ;               
   wire                            rst_n    ;  
@@ -73,41 +78,38 @@ module datapath #(
   wire                            MemRead  ;
   wire                            MemWrite ;
   wire     [01: 0]                MemtoReg ;
-  wire     [10: 0]                opcode   ;
+  wire     [`INST_SIZE - 1 : 0]   inst     ;
+  wire     [`WORD - 1 : 0]        r_data   ;
+  wire     [`WORD - 1 : 0]        pc       ;
+  wire     [`WORD - 1 : 0]        ALUOut   ;
+  wire     [`WORD - 1 : 0]        m_data   ;
 
   //===========================================================
   //* Internal signals
   //===========================================================
   //
   wire     [`WORD - 1 : 0]        ALU_res ;
-  wire     [`WORD - 1 : 0]        ALUOut  ;
   wire     [01:0]                 PCSrc   ;
-  wire     [`WORD - 1 : 0]        pc      ;
   wire     [`WORD - 1 : 0]        pc_incr ;
-  wire     [`INST_SIZE - 1 : 0]   inst    ;
 
-  wire     [`WORD - 1 : 0]        w_data  ;
   wire     [`WORD - 1 : 0]        r_data1 ;
   wire     [`WORD - 1 : 0]        r_data2 ;
-  wire     [`WORD - 1 : 0]        r_data  ;
   wire     [`WORD - 1 : 0]        ex_data ;
+  wire     [`WORD - 1 : 0]        w_data  ;
 
-  assign opcode = inst[31:21];
+  assign m_data = r_data2;
 
-  IF #( 
-  .PATH   ( INST_FILE ) ) IF(
+  IF IF( 
   .clk    ( clk       ) ,             
   .rst_n  ( rst_n     ) , 
   .ALU_res( ALU_res   ) ,    // Result of ADD ALU in EX, i.e. address of branch     
   .ALUOut ( ALUOut    ) ,    // Result of ALU in EX
   .PCSrc  ( PCSrc     ) ,    // Control signal of PCSrc  
   .pc     ( pc        ) ,    // Current PC
-  .pc_incr( pc_incr   ) ,    // Current PC + 4
-  .inst   ( inst      )      // Output instruction
+  .pc_incr( pc_incr   )      // Current PC + 4
   );
 
-  ID #( 
-  .PATH    ( REG_FILE ) ) ID(
+  ID ID( 
   .clk     ( clk      ) ,            
   .rst_n   ( rst_n    ) ,        
   .inst    ( inst     ) ,       // Input instruction to be decoded
@@ -121,8 +123,8 @@ module datapath #(
   );
 
   EX EX(
-  .clk      ( clk       ) ,           
-  .rst_n    ( rst_n     ) ,       
+  .clk      ( clk       )    ,           
+  .rst_n    ( rst_n     )    ,       
   .r_data1  ( r_data1   )    ,      // Read data 1 from register file      
   .r_data2  ( r_data2   )    ,      // Read data 2 from register file
   .ex_data  ( ex_data   )    ,      // Extend data from sign extend
@@ -137,17 +139,7 @@ module datapath #(
   .ALU_res  ( ALU_res   )           // Address for branch from ADD ALU
   );
 
-  data_mem #( 
-  .PATH    ( DATA_FILE )  , 
-  .SIZE    ( 1024      )  ) MEM(
-  .clk     ( clk       )  ,
-  .rst_n   ( rst_n     )  ,          
-  .MemRead ( MemRead   )  ,     // Signal of reading data from memory
-  .MemWrite( MemWrite  )  ,     // Signal of writing data to memory
-  .addr    ( ALUOut    )  ,     // Address
-  .w_data  ( r_data2   )  ,     // Data to be write
-  .r_data  ( r_data    )        // Data read from memory
-  );
+  // MEM is instantiated in TOP module
 
   write_back WB(
   .ALUOut  ( ALUOut   ) ,       // ALU output result in EX       

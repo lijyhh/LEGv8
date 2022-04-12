@@ -18,26 +18,51 @@
 
 //
 // Module
-module TOP(
-  clk                  
+module TOP #(
+  parameter INST_FILE = `TEST_INST_FILE,
+  parameter DATA_FILE = `TEST_DATA_FILE) (
+  clk    ,              
   rst_n            
   );
 
-  input                           clk                     
-  input                           rst_n                
+  input                           clk    ;                 
+  input                           rst_n  ;              
 
+  wire                            clk    ;                 
+  wire                            rst_n  ;              
 
+  wire    [`INST_SIZE - 1 : 0]    inst   ;            
+  wire    [`WORD - 1 : 0]         pc     ;               
+  wire    [`WORD - 1 : 0]         data   ;            
+  wire    [`WORD - 1 : 0]         addr   ;               
+  wire    [1:0]                   CB     ;            
 
+  SingleCycleCPU SingleCycleCPU(
+  .clk       ( clk    ) ,              
+  .rst_n     ( rst_n  ) ,         
+  .IDB       ( inst   ) ,  // Instruction data bus
+  .IAB       ( pc     ) ,  // Instruction address bus
+  .DDB       ( data   ) ,  // Data data bus
+  .DAB       ( addr   ) ,  // Data address bus
+  .CB        ( CB     )    // Control bus
+  );
 
+  // Instruction memory
+  inst_mem #( 
+  .PATH  ( INST_FILE   ) ) inst_mem (
+  .pc    ( pc     ) ,  
+  .inst  ( inst   )             
+  );
 
-
-
-
-
-
-
-
-
+  data_mem #( 
+  .PATH    ( DATA_FILE )  , 
+  .SIZE    ( 1024      )  ) MEM(
+  .clk     ( clk       )  ,
+  .MemRead ( CB[0]     )  ,     // Signal of reading data from memory
+  .MemWrite( CB[1]     )  ,     // Signal of writing data to memory
+  .addr    ( addr      )  ,     // Data address bus
+  .data    ( data      )        // Data data bus
+  );
 
 endmodule
 
