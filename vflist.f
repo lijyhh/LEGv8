@@ -28,5 +28,6 @@ F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\TOP_tb.sv
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\write_back_tb.sv
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\control.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\datapath.v
+F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\SingleCycleCPU.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\TOP.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\WB\\write_back.v
