@@ -1,20 +1,25 @@
-; 41 instructions
-
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 ; 0 1st
-BL #6               ; go to sort
+ADDI X0, XZR, #8 ; data memory[1]
 ; 4 2nd
-LDUR X9, [x0, #0]   ; v[0]
+ADDI X1, XZR, #5    ; 5 values to be sorted
 ; 8 3rd
-LDUR X9, [x0, #8]   ; v[1]
+ADDI SP, XZR, #1020 ; stack pointer pointer to 1020
 ; 12 4th
-LDUR X9, [x0, #16]  ; v[2]
+BL #6               ; go to sort
 ; 16 5th
-LDUR X9, [x0, #24]  ; v[3]
+LDUR X9, [x0, #0]   ; v[0]
 ; 20 6th
+LDUR X9, [x0, #8]   ; v[1]
+; 24 7th
+LDUR X9, [x0, #16]  ; v[2]
+; 28 8th
+LDUR X9, [x0, #24]  ; v[3]
+; 32 9th
 LDUR X9, [x0, #32]  ; v[4]
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 
+; 41 instructions
 ; 0 sort 1st
 SUBI SP, SP, #40    ; make room on stack for 5 registers
 ; 4 2nd

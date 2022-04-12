@@ -1,3 +1,10 @@
+;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
+; 0 1st
+ADDI X0, XZR, #6    ; X0 = 6, i.e. 6!
+; 4 2nd
+ADDI SP, XZR, #1020 ; Stack pointer point to 1024
+;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
+
 ; 15 instrcutions
 ; 0 fact 1st
 SUBI SP, SP, #16  ; Save return address and n on stack

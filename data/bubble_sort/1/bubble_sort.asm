@@ -1,23 +1,29 @@
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 ; 0 1st
-BL #10               ; go to sort
+ADDI X0, XZR, #8 ; data memory[1]
 ; 4 2nd
-LDUR X9, [x0, #0]   ; v[0]
+ADDI X1, XZR, #9    ; 5 values to be sorted
 ; 8 3rd
-LDUR X9, [x0, #8]   ; v[1]
+ADDI SP, XZR, #1020 ; stack pointer pointer to 1020
 ; 12 4th
-LDUR X9, [x0, #16]  ; v[2]
+BL #10              ; go to sort
 ; 16 5th
-LDUR X9, [x0, #24]  ; v[3]
+LDUR X9, [x0, #0]   ; v[0]
 ; 20 6th
-LDUR X9, [x0, #32]  ; v[4]
+LDUR X9, [x0, #8]   ; v[1]
 ; 24 7th
-LDUR X9, [x0, #40]  ; v[5]
+LDUR X9, [x0, #16]  ; v[2]
 ; 28 8th
-LDUR X9, [x0, #48]  ; v[6]
+LDUR X9, [x0, #24]  ; v[3]
 ; 32 9th
-LDUR X9, [x0, #56]  ; v[7]
+LDUR X9, [x0, #32]  ; v[4]
 ; 36 10th
+LDUR X9, [x0, #40]  ; v[5]
+; 40 11th
+LDUR X9, [x0, #48]  ; v[6]
+; 44 12th
+LDUR X9, [x0, #56]  ; v[7]
+; 48 13th
 LDUR X9, [x0, #64]  ; v[8]
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 
