@@ -17,7 +17,7 @@
 //*@Function : Realize data memory. 
 //
 //*@V0.0     : Initial design with separate read and write clock.
-//*@V0.1     : 
+//*@V0.1     : Merge r_data and w_data to data(inout)
 //
 //******************************************************************
 
@@ -31,12 +31,12 @@ module data_mem #(
   parameter PATH = `TEST_DATA_FILE, 
   parameter SIZE = 1024) (
   clk       ,              
-  rst_n     ,          
   MemRead   ,     // Signal of reading data from memory
   MemWrite  ,     // Signal of writing data to memory
   addr      ,     // Address
-  w_data    ,     // Data to be write
-  r_data          // Data read from memory
+  data            // Memory data to be read or written
+  //w_data    ,     // Data to be write
+  //r_data          // Data read from memory
   );
 
   //===========================================================
@@ -44,33 +44,38 @@ module data_mem #(
   //===========================================================
   //
   input                           clk     ;                  
-  input                           rst_n   ;               
   input                           MemRead ;                   
   input                           MemWrite;                
   input  [`WORD - 1 : 0]          addr    ;                   
-  input  [`WORD - 1 : 0]          w_data  ;                
-  output [`WORD - 1 : 0]          r_data  ;                   
+  inout  [`WORD - 1 : 0]          data    ;                
 
   wire                            clk     ;                  
-  wire                            rst_n   ;               
   wire                            MemRead ;                   
   wire                            MemWrite;                
   wire   [`WORD - 1 : 0]          addr    ;                   
-  wire   [`WORD - 1 : 0]          w_data  ;                
+  wire   [`WORD - 1 : 0]          data    ;                
+
+  //===========================================================
+  //* Internal signals
+  //===========================================================
+  //
   wire   [`WORD - 1 : 0]          r_data  ;                   
 
   reg    [`WORD - 1 : 0]          data_memory[SIZE - 1 : 0];
   
+  // Tri-state buffer
+  assign data = ( MemRead && ~MemWrite ) ? r_data : 'bz;
+
   // Initial memory
   initial $readmemh(PATH, data_memory);
 
   // Read by combinational logic
-  assign r_data = ( MemRead ? data_memory[addr/8] : 'b0 );
+  assign r_data = ( MemRead && ~MemWrite ) ? data_memory[addr/8] : 'b0;
 
   // Write data
-  always @( posedge clk or negedge rst_n ) begin
-    if( rst_n && MemWrite ) begin
-      data_memory[addr/8] <= w_data;
+  always @( posedge clk ) begin
+    if( MemWrite && ~MemRead ) begin
+      data_memory[addr/8] <= data;
     end
   end      
 

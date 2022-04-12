@@ -24,39 +24,35 @@
 
 //
 // Module
-module IF #( 
-  parameter PATH=`TEST_INST_FILE )(
+module IF( 
   clk         ,             
   rst_n       , 
   ALU_res     ,    // Result of ADD ALU in EX, i.e. address of branch     
   ALUOut      ,    // Result of ALU in EX
   PCSrc       ,    // Control signal of PCSrc  
   pc          ,    // Current PC
-  pc_incr     ,    // Current PC + 4
-  inst             // Output instruction
+  pc_incr          // Current PC + 4
   );
 
   //===========================================================
   //* Input and output ports
   //===========================================================
   //
-  input                       clk     ;                
-  input                       rst_n   ;             
-  input  [`WORD - 1 : 0]      ALU_res ;                   
-  input  [`WORD - 1 : 0]      ALUOut  ;                   
-  input  [1:0]                PCSrc   ;                   
-  input  [`WORD - 1 : 0]      pc      ;  
-  output [`WORD - 1 : 0]      pc_incr ;   
-  output [`INST_SIZE - 1 : 0] inst    ;
+  input                       clk      ;                
+  input                       rst_n    ;             
+  input  [`WORD - 1 : 0]      ALU_res  ;                   
+  input  [`WORD - 1 : 0]      ALUOut   ;                   
+  input  [1:0]                PCSrc    ;                   
+  output [`WORD - 1 : 0]      pc       ;  
+  output [`WORD - 1 : 0]      pc_incr  ;   
 
-  wire                        clk     ;                
-  wire                        rst_n   ;             
-  wire   [`WORD - 1 : 0]      ALU_res ;                   
-  wire   [`WORD - 1 : 0]      ALUOut  ;                   
-  wire   [1:0]                PCSrc   ;                   
-  wire   [`WORD - 1 : 0]      pc      ;   
-  wire   [`WORD - 1 : 0]      pc_incr ;   
-  wire   [`INST_SIZE - 1 : 0] inst    ;
+  wire                        clk      ;                
+  wire                        rst_n    ;             
+  wire   [`WORD - 1 : 0]      ALU_res  ;                   
+  wire   [`WORD - 1 : 0]      ALUOut   ;                   
+  wire   [1:0]                PCSrc    ;                   
+  wire   [`WORD - 1 : 0]      pc       ;   
+  wire   [`WORD - 1 : 0]      pc_incr  ;   
 
   //===========================================================
   //* Internal signals
@@ -90,14 +86,6 @@ module IF #(
   .D    ( pc_new )  ,           
   .Q    ( pc_c   )             
   );
-
-  // Instruction memory
-  inst_mem #( 
-  .PATH  ( PATH   ) ) inst_mem (
-  .pc    ( pc     ) ,  
-  .inst  ( inst   )             
-  );
-
 
 endmodule
 

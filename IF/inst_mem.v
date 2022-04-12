@@ -6,7 +6,7 @@
 //
 //*@File Type: verilog
 //
-//*@Version  : 0.1
+//*@Version  : 0.0
 //
 //*@Author   : Zehua Dong, SIGS
 //
@@ -17,7 +17,6 @@
 //*@Function : Memory of instruction. 
 //
 //*@V0.0     : Initial.
-//*@V0.1     : Add read signal.
 //
 //******************************************************************
 
@@ -30,7 +29,6 @@
 module inst_mem #( 
   parameter PATH = `TEST_INST_FILE, // instruction file
   parameter SIZE = 1024)( // size of instruction mem
-  read        ,
   pc          ,  
   inst             
   );
@@ -38,11 +36,9 @@ module inst_mem #(
   //* Input and output ports
   //===========================================================
   //
-  input                           read       ;                  
   input    [`WORD - 1 : 0]        pc         ;                  
   output   [`INST_SIZE - 1 : 0]   inst       ;                
 
-  wire                            read       ;                  
   wire     [`WORD - 1 : 0]        pc         ;                  
   wire     [`INST_SIZE - 1 : 0]   inst       ;                
 
@@ -52,7 +48,7 @@ module inst_mem #(
   // Initialize memory
   initial $readmemh( PATH, inst_memory );
 
-  assign inst = read ? inst_memory[pc / 4] : 'b0;
+  assign inst = inst_memory[pc / 4];
 
 endmodule
 
