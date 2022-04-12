@@ -14,34 +14,31 @@
 // Definition of file path
 //*******************************
 // Factorial
-// Instruction memory file
-`define FACT_INST_FILE "data/factorial/inst_mem.txt"
-// Register file
-`define FACT_REG_FILE  "data/factorial/reg_mem.txt"
+// Instruction memory file test 0
+`define FACT_INST_FILE "data/factorial/0_fact3/inst_mem.txt"
 // Data file
-`define FACT_DATA_FILE  "data/factorial/data_mem.txt"
+`define FACT_DATA_FILE  "data/factorial/0_fact3/data_mem.txt"
+
+// Instruction memory file test 1
+`define FACT_INST_FILE_1 "data/factorial/1_fact6/inst_mem.txt"
+// Data file
+`define FACT_DATA_FILE_1 "data/factorial/1_fact6/data_mem.txt"
 
 // Bubble sort test 0
 // Instruction memory file
 `define SORT_INST_FILE "data/bubble_sort/0/inst_mem.txt"
-// Register file
-`define SORT_REG_FILE  "data/bubble_sort/0/reg_mem.txt"
 // Data file
 `define SORT_DATA_FILE  "data/bubble_sort/0/data_mem.txt"
 
 // Bubble sort test 1
 // Instruction memory file
 `define SORT_INST_FILE_1 "data/bubble_sort/1/inst_mem.txt"
-// Register file
-`define SORT_REG_FILE_1  "data/bubble_sort/1/reg_mem.txt"
 // Data file
 `define SORT_DATA_FILE_1  "data/bubble_sort/1/data_mem.txt"
 
 // Test
 // Instruction memory for test
 `define TEST_INST_FILE "data/test/inst_mem.txt"
-// Register memory for test
-`define TEST_REG_FILE "data/test/reg_mem.txt"
 // Data memory for test
 `define TEST_DATA_FILE "data/test/data_mem.txt"
 
