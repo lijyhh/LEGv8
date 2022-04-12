@@ -24,8 +24,7 @@
 
 //
 // Module
-module ID #( 
-  parameter PATH = `TEST_REG_FILE ) (
+module ID( 
   clk      ,            
   rst_n    ,        
   inst     ,       // Input instruction to be decoded
@@ -91,8 +90,7 @@ module ID #(
     .out ( w_reg       ) 
   );
 
-  reg_file #( 
-  .PATH    ( PATH      ) ) reg_file(
+  reg_file reg_file(
   .clk     ( clk       ) ,     // Should be clk       
   .rst_n   ( rst_n     ) ,        
   .r_reg1  ( r_reg1    ) ,     // Read register 1          

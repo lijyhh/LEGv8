@@ -6,7 +6,7 @@
 //
 //*@File Type: verilog
 //
-//*@Version  : 0.0
+//*@Version  : 0.1
 //
 //*@Author   : Zehua Dong, SIGS
 //
@@ -14,7 +14,9 @@
 //
 //*@Date     : 2022/3/28 23:39:39
 //
-//*@Function : Realize register file read and wirte. 
+//*@Function : 
+//*@V0.0     : Realize register file read and wirte. 
+//*@V0.1     : Replace initial block to always block.
 //
 //******************************************************************
 
@@ -24,8 +26,7 @@
 
 //
 // Module
-module reg_file #( 
-  parameter PATH = `TEST_REG_FILE )(
+module reg_file( 
   clk      ,            
   rst_n    ,        
   r_reg1   ,     // Read register 1          
@@ -62,14 +63,25 @@ module reg_file #(
   wire   [`WORD - 1 : 0]    r_data2 ; 
 
   reg    [`WORD - 1 : 0]    reg_memory[31:0];
-  initial $readmemh(PATH, reg_memory);
+
+  //initial $readmemh(PATH, reg_memory);
+  
+  // Used in initialize register value
+  integer i;
 
   assign r_data1 = reg_memory[r_reg1];
   assign r_data2 = reg_memory[r_reg2];
 
   always @( posedge clk or negedge rst_n ) begin
-    if( rst_n && RegWrite && w_reg != 'd31 ) begin
-      reg_memory[w_reg] <= w_data;
+    if( ~rst_n ) begin
+      for( i = 0; i < 32; i = i + 1 ) begin
+        reg_memory[i] <= 'd0;
+      end
+    end
+    else begin
+      if( RegWrite && w_reg != 'd31 ) begin // XZR cannot be written
+        reg_memory[w_reg] <= w_data;
+      end
     end
   end      
 
