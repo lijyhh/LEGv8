@@ -78,7 +78,7 @@ module EX_tb();
     input integer i;
     begin
       assert(tb_ALUOut == ALUOut && tb_PCSrc == PCSrc && tb_ALU_res == ALU_res) 
-      else $error("[%d] tb_ALUOut = %d, tb_PCSrc = %d, tb_ALU_res = %h", 
+      else $error("[%0d] tb_ALUOut = %0d, tb_PCSrc = %0d, tb_ALU_res = %h", 
         i, tb_ALUOut, tb_PCSrc, tb_ALU_res);
     end
   endtask

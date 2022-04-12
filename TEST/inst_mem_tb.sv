@@ -29,7 +29,6 @@ module inst_mem_tb();
   parameter PATH = `TEST_INST_FILE;
 
   reg                   tb_clk  ;
-  reg                   tb_read ;
   reg  [`WORD-1:0]      tb_pc   ;
   wire [`INST_SIZE-1:0] tb_inst ;
 
@@ -41,7 +40,6 @@ module inst_mem_tb();
 
   inst_mem #( 
   .PATH  ( PATH   ) ) inst_mem_TB (
-  .read  ( tb_read   ) ,
   .pc    ( tb_pc     ) ,  
   .inst  ( tb_inst   )             
   );
@@ -49,12 +47,12 @@ module inst_mem_tb();
   initial begin
     `TB_BEGIN
     tb_pc = 64'd0;
-    tb_read = 0;
     repeat(3) @(posedge tb_clk); // Wait reset    
-    tb_read = 1;
     repeat(64) begin // 1024 is too much console spam
       @(negedge tb_clk)
-      #1 assert(tb_inst == tb_pc / 4) else $error("ERROR!");       
+      #1 assert(tb_inst == tb_pc / 4) 
+        $strobe("%0d, !!TEST SUCCESS!!", $time);
+      else $error("ERROR!");       
       tb_pc = tb_pc + 4;
     end
     `TB_END

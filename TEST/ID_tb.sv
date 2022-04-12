@@ -26,8 +26,6 @@
 // Module
 module ID_tb();
 
-  parameter REG_FILE = `TEST_REG_FILE;
-
   reg                             tb_clk     ;                
   reg                             tb_rst_n   ;             
   reg     [`INST_SIZE - 1 : 0]    tb_inst    ;                   
@@ -57,8 +55,7 @@ module ID_tb();
   end
 
   
-  ID #( 
-  .PATH    ( REG_FILE ) ) ID_TB(
+  ID ID_TB(
   .clk     ( tb_clk      ) ,            
   .rst_n   ( tb_rst_n    ) ,        
   .inst    ( tb_inst     ) ,       // Input tb_inst to be decoded
@@ -78,7 +75,8 @@ module ID_tb();
     input integer i;
     begin
       assert(tb_r_data1 == r_data1 && tb_r_data2 == r_data2 && tb_ex_data == ex_data) 
-      else $error("[%d] tb_r_data1 = %d, tb_r_data2 = %d, tb_ex_data = %d", 
+        $strobe("%0d, !!TEST SUCCESS!!", $time);
+      else $error("[%0d] tb_r_data1 = %0d, tb_r_data2 = %0d, tb_ex_data = %h", 
         i, tb_r_data1, tb_r_data2, tb_ex_data);
     end
   endtask
@@ -94,71 +92,71 @@ module ID_tb();
     tb_w_data = `WORD'd1; // X9 = 1 
     tb_combined_signals = 3'b100;
     #`CYCLE;   
-    my_assert(22, 4, 64, 0);
+    my_assert(0, 0, 64, 0);
     
     // ADD X10, X19, X9
     tb_inst = 32'h8B09026A;
     tb_w_data = `WORD'd20; // X10 = 20
     tb_combined_signals = 3'b100;
     #`CYCLE;
-    my_assert(19, 1, 'h8B09026A, 1);
+    my_assert(0, 1, 'h8B09026A, 1);
     
     // SUB X11, X20, X10
     tb_inst = 32'hCB0A028B;
     tb_w_data = `WORD'd0; // X11 = 0
     tb_combined_signals = 3'b100;
     #`CYCLE;
-    my_assert(20, 20, 'hCB0A028B, 2);
+    my_assert(0, 20, 'hCB0A028B, 2);
     
     // STUR X11, [X22, #96]
     tb_inst = 32'hF80602CB;
     tb_combined_signals = 3'b010; 
     #`CYCLE;
-    my_assert(22, 0, 96, 3);
+    my_assert(0, 0, 96, 3);
     
     // CBZ X11, -5
     tb_inst = 32'hB4FFFF6B;
     tb_combined_signals = 3'b010;
     #`CYCLE;
-    my_assert(27, 0, 'hFFFFFFFFFFFFFFFB, 4);
+    my_assert(0, 0, 'hFFFFFFFFFFFFFFFB, 4);
     
     // CBZ X9, 8
     tb_inst = 32'hB4000109;
     tb_combined_signals = 3'b010;
     #`CYCLE;
-    my_assert(8, 1, 8, 5);
+    my_assert(0, 1, 8, 5);
     
     // CBNZ X9, 8
     tb_inst = 32'hB5000109;
     tb_combined_signals = 3'b010;
     #`CYCLE;
-    my_assert(8, 1, 8, 6);
+    my_assert(0, 1, 8, 6);
 
     // B 64
     tb_inst = 32'h14000040;
     tb_combined_signals = 3'b000;
     #`CYCLE;
-    my_assert(2, 0, 64, 7);
+    my_assert(0, 0, 64, 7);
     
     // B -55
     tb_inst = 32'h17FFFFC9;
     tb_combined_signals = 3'b000;
     #`CYCLE;
-    my_assert(30, 31, 'hFFFFFFFFFFFFFFC9, 8);
+    my_assert(0, 0, 'hFFFFFFFFFFFFFFC9, 8);
     
     // ORR X9, X10, X21
     tb_inst = 32'hAA150149;
     tb_w_data = `WORD'd30;
     tb_combined_signals = 3'b100;
     #`CYCLE;
-    my_assert(20, 21, 'hAA150149, 9);
+    my_assert(20, 0, 'hAA150149, 9);
     
     // AND X9, X22, X10
     tb_inst = 32'h8A0A02C9;
     tb_w_data = `WORD'd16;
     tb_combined_signals = 3'b100;
     #`CYCLE;
-    my_assert(22, 20, 'h8A0A02C9, 10);
+    my_assert(0, 20, 'h8A0A02C9, 10);
 
     `TB_END
     $finish;

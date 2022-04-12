@@ -55,17 +55,32 @@ module IF_tb;
     $dumpvars();
   end
 
-  IF #( 
-  .PATH    ( INST_FILE )) IF_TB(
+  IF IF( 
   .clk     ( tb_clk     ),             
   .rst_n   ( tb_rst_n   ), 
   .ALU_res ( tb_ALU_res ),    // Result of ADD ALU in EX, i.e. address of branch     
   .ALUOut  ( tb_ALUOut  ),    // Result of ALU in EX
   .PCSrc   ( tb_PCSrc   ),    // Control signal of PCSrc  
   .pc      ( tb_pc      ),    // Current PC
-  .pc_incr ( tb_pc_incr ),    // Current PC + 4
-  .inst    ( tb_inst    )     // Output instruction
+  .pc_incr ( tb_pc_incr )     // Current PC + 4
   );
+
+  // Instruction memory
+  inst_mem #( 
+  .PATH  ( INST_FILE   ) ) inst_mem (
+  .pc    ( tb_pc     ) ,  
+  .inst  ( tb_inst   )             
+  );
+
+  task my_assert;
+    input [`INST_SIZE - 1 : 0] inst;
+    input integer i;
+    begin
+      #`CYCLE assert(tb_inst == inst) 
+        $strobe("%0d, !!TEST SUCCESS!!", $time);
+      else $error("[%0d] tb_inst = %0d", i, inst);
+    end
+  endtask
 
   initial begin
     `TB_BEGIN
@@ -79,19 +94,18 @@ module IF_tb;
     tb_ALU_res = 124; // Instruction is 31
     tb_ALUOut = 60;   // Instruction is 15
     #1;
-    #`CYCLE assert(tb_inst == 1) else $error("[0] tb_inst = %d", tb_inst);
     
     tb_PCSrc = 'b01;  
-    #`CYCLE assert(tb_inst == 31) else $error("[1] tb_inst = %d", tb_inst);
+    my_assert(31, 0);
     
     tb_PCSrc = 'b10;  
-    #`CYCLE assert(tb_inst == 15) else $error("[2] tb_inst = %d", tb_inst);
+    my_assert(15, 1);
     
     tb_PCSrc = 'b11;  
-    #`CYCLE assert(tb_inst == 15) else $error("[3] tb_inst = %d", tb_inst);
+    my_assert(15, 2);
 
     tb_PCSrc = 'b00;  
-    #`CYCLE assert(tb_inst == 16) else $error("[4] tb_inst = %d", tb_inst);
+    my_assert(16, 3);
     
     `TB_END
     $finish;

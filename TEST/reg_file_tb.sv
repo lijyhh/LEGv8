@@ -26,8 +26,6 @@
 // Module
 module reg_file_tb();
   
-  parameter PATH = `TEST_REG_FILE;
-
   reg  tb_clk, tb_rst_n;
   reg  tb_RegWrite;
   reg  [4:0] tb_r_reg1, tb_r_reg2, tb_w_reg;
@@ -47,8 +45,7 @@ module reg_file_tb();
     tb_rst_n = 1;
   end
   
-  reg_file #( 
-  .PATH    ( PATH      ) ) reg_file_TB(
+  reg_file reg_file_TB(
   .clk     ( tb_clk       ) ,            
   .rst_n   ( tb_rst_n     ) ,        
   .r_reg1  ( tb_r_reg1    ) ,     // Read register 1          
@@ -73,24 +70,25 @@ module reg_file_tb();
     // Wait reset done
     repeat(3) @(posedge tb_clk) #1;
     // Begin test cases
-    tb_r_reg1 = 'd31; tb_r_reg2 = 'd30;
-    #`CYCLE assert(tb_r_data1 == 'd31 && tb_r_data2 == 'd30) else $error("[0] tb_r_data1 = %d", tb_r_data1);
+    tb_r_reg1 = 'd31; 
+    tb_r_reg2 = 'd30;
+
+    // Read data from register, all values are equal to 0 in init states
+    #`CYCLE assert(tb_r_data1 == 'd0 && tb_r_data2 == 'd0) 
+      $strobe("%0d, !!TEST SUCCESS!!", $time);
+    else $error("[0] tb_r_data1 = %0d", tb_r_data1);
     
     tb_r_reg1 = 'd20;
-    #`CYCLE assert(tb_r_data1 == 'd20) else $error("[1] tb_r_data1 = %d", tb_r_data1);
+    #`CYCLE assert(tb_r_data1 == 'd0) 
+      $strobe("%0d, !!TEST SUCCESS!!", $time);
+    else $error("[1] tb_r_data1 = %0d", tb_r_data1);
     
     tb_r_reg1 = 'd0;
-    #`CYCLE assert(tb_r_data1 == 'd0) else $error("[2] tb_r_data1 = %d", tb_r_data1);
+    #`CYCLE assert(tb_r_data1 == 'd0) 
+      $strobe("%0d, !!TEST SUCCESS!!", $time);
+    else $error("[2] tb_r_data1 = %0d", tb_r_data1);
     
-    tb_r_reg2 = 'd5;
-    #`CYCLE assert(tb_r_data2 == 'd5) else $error("[3] tb_r_data2 = %d", tb_r_data2);
-    
-    tb_r_reg2 = 'd17;
-    #`CYCLE assert(tb_r_data2 == 'd17) else $error("[4] tb_r_data2 = %d", tb_r_data2);
-    
-    tb_r_reg2 = 'd7;
-    #`CYCLE assert(tb_r_data2 == 'd7) else $error("[5] tb_r_data2 = %d", tb_r_data2);
-    
+    // Write data 
     tb_w_reg = 'd11;
     tb_w_data = 'd100;
     tb_RegWrite = 1;
@@ -99,7 +97,9 @@ module reg_file_tb();
     tb_w_data = 'd0;
     tb_RegWrite = 0;
     tb_r_reg1 = 'd11;
-    #`CYCLE assert(tb_r_data1 == 'd100) else $error("[6] tb_r_data1 = %d", tb_r_data1);
+    #`CYCLE assert(tb_r_data1 == 'd100) 
+      $strobe("%0d, !!TEST SUCCESS!!", $time);
+    else $error("[6] tb_r_data1 = %0d", tb_r_data1);
     
     tb_w_reg = 'd1;
     tb_w_data = 'd123456789;
@@ -109,7 +109,9 @@ module reg_file_tb();
     tb_w_data = 'd0;
     tb_RegWrite = 0;
     tb_r_reg2 = 'd1;
-    #`CYCLE assert(tb_r_data2 == 'd123456789) else $error("[7] tb_r_data2 = %d", tb_r_data2);
+    #`CYCLE assert(tb_r_data2 == 'd123456789) 
+      $strobe("%0d, !!TEST SUCCESS!!", $time);
+    else $error("[7] tb_r_data2 = %0d", tb_r_data2);
     
     `TB_END
     $finish;

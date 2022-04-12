@@ -36,44 +36,44 @@ module ALU_control_tb();
   .ALUCtl( tb_ALUCtl )       // Output ALU control signal 
   );
 
+  task my_assert;
+    input [3 : 0] ALUCtl;
+    input integer i;
+    begin
+      #`CYCLE;
+      assert( tb_ALUCtl == ALUCtl ) 
+        $strobe("%0d, !!TEST SUCCESS!!", $time);
+      else $error("[%0d], tb_ALUCtl = 'b%0b", i, ALUCtl);
+    end
+  endtask
+
+
   initial begin
     `TB_BEGIN
 
     tb_opcode = 11'bxxxxxxxxxxx;
     tb_ALUOp  = 2'b00;
-    #`CYCLE;
-    assert( tb_ALUCtl == 4'b0010 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    else $error("[0] tb_ALUCtl = %4b", tb_ALUCtl);
+    my_assert(4'b0010, 0);
 
     tb_opcode = 11'bxxxxxxxxxxx;
     tb_ALUOp  = 2'b01;
-    #`CYCLE;
-    assert( tb_ALUCtl == 4'b0111 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    else $error("[1] tb_ALUCtl = %4b", tb_ALUCtl);
+    my_assert(4'b0111, 1);
 
     tb_opcode = 11'b10001011000;
     tb_ALUOp  = 2'b10;
-    #`CYCLE;
-    assert( tb_ALUCtl == 4'b0010 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    else $error("[2] tb_ALUCtl = %4b", tb_ALUCtl);
+    my_assert(4'b0010, 2);
 
     tb_opcode = 11'b11001011000;
     tb_ALUOp  = 2'b10;
-    #`CYCLE;
-    assert( tb_ALUCtl == 4'b0110 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    else $error("[3] tb_ALUCtl = %4b", tb_ALUCtl);
+    my_assert(4'b0110, 3);
 
     tb_opcode = 11'b10001010000;
     tb_ALUOp  = 2'b10;
-    #`CYCLE;
-    assert( tb_ALUCtl == 4'b0000 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    else $error("[4] tb_ALUCtl = %4b", tb_ALUCtl);
+    my_assert(4'b0000, 4);
 
     tb_opcode = 11'b10101010000;
     tb_ALUOp  = 2'b10;
-    #`CYCLE;
-    assert( tb_ALUCtl == 4'b0001 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
-    else $error("[5] tb_ALUCtl = %4b", tb_ALUCtl);
+    my_assert(4'b0001, 5);
     
     `TB_END
     $finish;

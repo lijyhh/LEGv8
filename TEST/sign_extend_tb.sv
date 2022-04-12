@@ -33,49 +33,60 @@ module sign_extend_tb();
   .inst    ( tb_inst    ) ,        // Input inst     
   .ex_data ( tb_ex_data )          // Extended data            
   );
+
+  task my_assert;
+    input [`WORD - 1 : 0] ex_data;
+    input integer i;
+    begin
+      #`CYCLE assert(tb_ex_data == ex_data) 
+        $strobe("%0d, !!TEST SUCCESS!!", $time);
+      else $error("[%0d] tb_ex_data = %0h", i, ex_data);
+    end
+  endtask
+
   
   initial begin
     `TB_BEGIN
     
     // LDUR X9, [X22, #64]
     tb_inst = 32'hF84402C9;
-    #`CYCLE assert(tb_ex_data == `WORD'd64) else $error("[0] tb_ex_data != `WORD'd64");
+    my_assert(64, 0);
     
     // ADD X10, X19, X9
     tb_inst = 32'h8B09026A;
-    #`CYCLE assert(tb_ex_data == tb_inst) else $error("[1] tb_ex_data != tb_inst");
+    my_assert(tb_inst, 1);
     
     // SUB X11, X20, X10
     tb_inst = 32'hCB0A028B;
-    #`CYCLE assert(tb_ex_data == tb_inst) else $error("[2] tb_ex_data != tb_inst");
+    my_assert(tb_inst, 2);
     
     // STUR X11, [X22, #96]
     tb_inst = 32'hF80602CB;
-    #`CYCLE assert(tb_ex_data == 96) else $error("[3] tb_ex_data != 96");
+    my_assert(96, 3);
     
     // CBZ X11, -5
     tb_inst = 32'hB4FFFF6B;
-    #`CYCLE assert(tb_ex_data == -5) else $error("[4] tb_ex_data != -5");
+    my_assert(-5, 4);
     
     // CBZ X9, 8
     tb_inst = 32'hB4000109;
-    #`CYCLE assert(tb_ex_data == 8) else $error("[5] tb_ex_data != 8");
+    my_assert(8, 5);
     
     // B 64
     tb_inst = 32'h14000040;
-    #`CYCLE assert(tb_ex_data == 64) else $error("[6] tb_ex_data != 64");
+    my_assert(64, 6);
     
     // B -55
     tb_inst = 32'h17FFFFC9;
-    #`CYCLE assert(tb_ex_data == -55) else $error("[7] tb_ex_data != -55");
+    my_assert(-55, 7);
     
     // ORR X9, X10, X21
     tb_inst = 32'hAA150149;
-    #`CYCLE assert(tb_ex_data == tb_inst) else $error("[8] tb_ex_data != tb_inst");;
+    my_assert(tb_inst, 8);
     
     // AND X9, X22, X10
     tb_inst = 32'h8A0A02C9;
-    #`CYCLE assert(tb_ex_data == tb_inst) else $error("[9] tb_ex_data != tb_inst");
+    my_assert(tb_inst, 9);
     
     `TB_END
     $finish;
