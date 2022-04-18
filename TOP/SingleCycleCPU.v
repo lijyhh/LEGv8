@@ -33,7 +33,8 @@ module SingleCycleCPU(
   IAB     ,  // Instruction address bus
   DDB     ,  // Data data bus
   DAB     ,  // Data address bus
-  CB         // Control bus
+  MemWrite,  // Memory write signal
+  MemRead    // Memory read signal
   );
 
   //===========================================================
@@ -46,7 +47,8 @@ module SingleCycleCPU(
   inout   [`WORD - 1 : 0]         DDB     ;
   output  [`WORD - 1 : 0]         IAB     ;
   output  [`WORD - 1 : 0]         DAB     ;
-  output  [1 : 0]                 CB      ;
+  output                          MemWrite;            
+  output                          MemRead ;            
 
   wire                            clk     ; 
   wire                            rst_n   ;               
@@ -54,7 +56,8 @@ module SingleCycleCPU(
   wire    [`WORD - 1 : 0]         DDB     ;
   wire    [`WORD - 1 : 0]         IAB     ;                
   wire    [`WORD - 1 : 0]         DAB     ;                
-  wire    [1 : 0]                 CB      ;                
+  wire                            MemWrite;            
+  wire                            MemRead ;            
 
   //===========================================================
   //* Internal signals
@@ -67,9 +70,7 @@ module SingleCycleCPU(
   wire                            ALUSrc  ;                
   wire    [01:0]                  ALUOp   ;                
   wire                            SregUp  ;                
-  wire    [02:0]                  BranchOp;                
-  wire                            MemRead ;                
-  wire                            MemWrite;                
+  wire    [02:0]                  BranchOp;               
   wire    [01: 0]                 MemtoReg; 
 
   wire    [`WORD - 1 : 0]         w_data  ;
@@ -79,7 +80,6 @@ module SingleCycleCPU(
   assign r_data = ( ~MemWrite && MemRead ) ? DDB : 'bz;
 
   assign opcode = IDB[31:21];
-  assign CB = {MemWrite, MemRead};
 
   control control_path(
   .opcode  ( opcode   ) ,          // Opcode from instruction, 11 bits     
