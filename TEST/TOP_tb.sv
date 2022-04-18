@@ -25,10 +25,10 @@
 //
 // Module
 
-`define FACT 
+//`define FACT 
 //`define FACT_1 
 //`define SORT 
-//`define SORT_1 
+`define SORT_1 
 
 module TOP_tb();
 
@@ -107,7 +107,7 @@ module TOP_tb();
     begin
       assert( tb_w_data == w_data && tb_w_reg == w_reg ) begin
           v = w_data;
-          $strobe("%0d, !!v[%0d] TEST SUCCESS!!", $time, i);
+          $strobe("Time: %0d, !!v[%0d] = %0h TEST SUCCESS!!", $time, i, tb_w_data);
       end
       else begin
         $error("tb_w_data = %0d", tb_w_data);
@@ -120,7 +120,7 @@ module TOP_tb();
 `ifdef FACT
   
   initial begin
-    $display("\n===== FACTORIAL: 3 =====\n");
+    $display("\n===== FACTORIAL: 3 =====");
     $dumpfile("TOP_tb_FACT3.vcd ");
     $dumpvars();
   end
@@ -131,7 +131,7 @@ module TOP_tb();
 
     // Test 3!
     if( tb_w_data == 6 ) begin
-      $strobe("%0d, !!TEST SUCCESS!!", $time);
+      $strobe("Time: %0d, Fact(3) = %0d, !!TEST SUCCESS!!", $time, tb_w_data);
       `TB_END
       $finish;
     end
@@ -140,18 +140,15 @@ module TOP_tb();
 `elsif FACT_1
   
   initial begin
-    $display("\n===== FACTORIAL: 6 =====\n");
+    $display("\n===== FACTORIAL: 6 =====");
     $dumpfile("TOP_tb_FACT6.vcd ");
     $dumpvars();
   end
 
   always @(negedge tb_clk) begin
-    // Test 12!
-    //if( tb_w_data == 479001600 ) $strobe("%0d, !!fact12 TEST SUCCESS!!", $time);
-
     //Test 6!
     if( tb_w_data == 720 ) begin
-     $strobe("%0d, !!TEST SUCCESS!!", $time);
+     $strobe("Time: %0d, Fact(6) = %0d, !!TEST SUCCESS!!", $time, tb_w_data);
      `TB_END
      $finish;
     end
@@ -160,7 +157,7 @@ module TOP_tb();
 `elsif SORT
   
   initial begin
-    $display("\n===== BUBBLE SORT =====\n");
+    $display("\n===== BUBBLE SORT =====");
     $dumpfile("TOP_tb_SORT.vcd ");
     $dumpvars();
   end
@@ -199,7 +196,7 @@ module TOP_tb();
 `elsif SORT_1
   
   initial begin
-    $display("\n===== BUBBLE SORT 1 =====\n");
+    $display("\n===== BUBBLE SORT 1 =====");
     $dumpfile("TOP_tb_SORT_1.vcd ");
     $dumpvars();
   end
