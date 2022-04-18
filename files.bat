@@ -1,5 +1,5 @@
 DIR *.v *.vh *.sv /B /S > vflist1.f
-python F:\Files\lab_2001\Project\batch_files\scripts\py\file_str_replace.py vflist1.f vflist.f
+python py\file_str_replace.py vflist1.f vflist.f
 del /f/s/q  vflist1.f
 
 vlib work
