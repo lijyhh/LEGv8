@@ -33,12 +33,14 @@ module EX(
   inst         ,      // Instruction for ALU control signal
   ALUOp        ,      // Output from control unit for ALU control signal
   ALUSrc       ,      // Output from control unit for ALU source data 
-  BranchOp     ,      // Output from control unit for PCSrc, 3 bits
   SregUp       ,      // Output from control unit for status register
   pc           ,      // Program counter for branch address
   ALUOut       ,      // Output result from ALU
-  PCSrc        ,      // PC source flag
-  ALU_res             // Address for branch from ADD ALU
+  ALU_res      ,      // Address for branch from ADD ALU
+  N            ,      // Negative
+  Z            ,      // Zero
+  C            ,      // Carry
+  V                   // oVerflow
   );
 
   //===========================================================
@@ -53,12 +55,14 @@ module EX(
   input  [`INST_SIZE - 1 : 0]     inst         ;               
   input  [1:0]                    ALUOp        ;                  
   input                           ALUSrc       ;                  
-  input  [2:0]                    BranchOp     ;               
   input                           SregUp       ;                  
   input  [`WORD - 1 : 0]          pc           ;               
   output [`WORD - 1 : 0]          ALUOut       ;                  
-  output [1:0]                    PCSrc        ;               
   output [`WORD - 1 : 0]          ALU_res      ;                  
+  output                          N            ;     
+  output                          Z            ;     
+  output                          C            ;     
+  output                          V            ;     
 
   wire                            clk          ;                  
   wire                            rst_n        ;                  
@@ -68,12 +72,14 @@ module EX(
   wire   [`INST_SIZE - 1 : 0]     inst         ;               
   wire   [1:0]                    ALUOp        ;                  
   wire                            ALUSrc       ;                  
-  wire   [2:0]                    BranchOp     ;               
   wire                            SregUp       ;                  
   wire   [`WORD - 1 : 0]          pc           ;               
   wire   [`WORD - 1 : 0]          ALUOut       ;                  
-  wire   [1:0]                    PCSrc        ;               
   wire   [`WORD - 1 : 0]          ALU_res      ;                  
+  wire                            N            ;
+  wire                            Z            ;
+  wire                            V            ;
+  wire                            C            ;
 
   //===========================================================
   //* Internal signals
@@ -85,10 +91,6 @@ module EX(
   wire                            Zero         ;
   wire                            Overflow     ;
   wire                            Negative     ;
-  wire                            C            ;
-  wire                            Z            ;
-  wire                            V            ;
-  wire                            N            ;
   wire   [`WORD - 1 : 0]          shift_ex_data;
 
   // ALU source data 2
@@ -151,17 +153,6 @@ module EX(
   .ALUOut   ( ALU_res       ),     // Result of ALU
   .Overflow (               ),     // Overflow for signed
   .Negative (               )      // Negative flag for signed
-  );
-
-  // Generate PC source flag
-  br_control br_control(
-  .BranchOp   ( BranchOp  )  ,    // 3 bits branch operation code from control unit
-  .ConBr_type ( inst[4:0] )  ,    // 5 bits conditional branch type of insturction( i.e. rt register of B.cond ) 
-  .Zero       ( Z         )  ,    // Zero flag from ALU
-  .Negative   ( N         )  ,    // Negative flag from ALU
-  .Overflow   ( V         )  ,    // Overflow flag from ALU
-  .Co         ( C         )  ,    // Carry out flag from ALU
-  .PCSrc      ( PCSrc     )       // 2 bits output flag for PC source
   );
 
 endmodule

@@ -2,7 +2,7 @@
 
 //******************************************************************
 //
-//*@File Name: datapath.v
+//*@File Name: SingleCycleDatapath.v
 //
 //*@File Type: verilog
 //
@@ -14,7 +14,7 @@
 //
 //*@Date     : 2022/3/30 9:18:01
 //
-//*@Function : Datapath module. 
+//*@Function : Datapath module in single cycle mode. 
 //
 //******************************************************************
 
@@ -24,7 +24,7 @@
 
 //
 // Module
-module datapath( 
+module SingleCycleDatapath( 
   clk      ,            
   rst_n    ,        
   RegWrite ,
@@ -32,7 +32,7 @@ module datapath(
   WRegLoc  ,
   ALUOp    ,
   ALUSrc   ,
-  BranchOp ,
+  BranchOp ,      // Output from control unit for PCSrc, 3 bits
   SregUp   ,
   MemRead  ,
   MemWrite ,
@@ -41,7 +41,7 @@ module datapath(
   r_data   ,
   pc       ,
   ALUOut   ,
-  m_data        // Data to be written into data memory
+  MemData       // Data to be written into data memory
   );
 
   //===========================================================
@@ -64,7 +64,7 @@ module datapath(
   input    [`WORD - 1 : 0]        r_data   ;
   output   [`WORD - 1 : 0]        pc       ;
   output   [`WORD - 1 : 0]        ALUOut   ;
-  output   [`WORD - 1 : 0]        m_data   ;
+  output   [`WORD - 1 : 0]        MemData  ;
 
   wire                            clk      ;               
   wire                            rst_n    ;  
@@ -82,7 +82,7 @@ module datapath(
   wire     [`WORD - 1 : 0]        r_data   ;
   wire     [`WORD - 1 : 0]        pc       ;
   wire     [`WORD - 1 : 0]        ALUOut   ;
-  wire     [`WORD - 1 : 0]        m_data   ;
+  wire     [`WORD - 1 : 0]        MemData  ;
 
   //===========================================================
   //* Internal signals
@@ -97,7 +97,12 @@ module datapath(
   wire     [`WORD - 1 : 0]        ex_data ;
   wire     [`WORD - 1 : 0]        w_data  ;
 
-  assign m_data = r_data2;
+  wire                            N       ;
+  wire                            Z       ;
+  wire                            V       ;
+  wire                            C       ;
+
+  assign MemData = r_data2;
 
   IF IF( 
   .clk    ( clk       ) ,             
@@ -131,15 +136,29 @@ module datapath(
   .inst     ( inst      )    ,      // Instruction for ALU control signal
   .ALUOp    ( ALUOp     )    ,      // Output from control unit for ALU control signal
   .ALUSrc   ( ALUSrc    )    ,      // Output from control unit for ALU source data 
-  .BranchOp ( BranchOp  )    ,      // Output from control unit for PCSrc, 3 bits
   .SregUp   ( SregUp    )    ,      // Output from control unit for status register
   .pc       ( pc        )    ,      // Program counter for branch address
   .ALUOut   ( ALUOut    )    ,      // Output result from ALU
-  .PCSrc    ( PCSrc     )    ,      // PC source flag
-  .ALU_res  ( ALU_res   )           // Address for branch from ADD ALU
+  .ALU_res  ( ALU_res   )    ,      // Address for branch from ADD ALU
+  .N        ( N         )    ,      // Negative
+  .Z        ( Z         )    ,      // Zero
+  .C        ( C         )    ,      // Carry
+  .V        ( V         )           // oVerflow
   );
 
   // MEM is instantiated in TOP module
+
+  // Generate PC source flag
+  br_control MEM(
+  .BranchOp   ( BranchOp  )  ,    // 3 bits branch operation code from control unit
+  .ConBr_type ( inst[4:0] )  ,    // 5 bits conditional branch type of insturction( i.e. rt register of B.cond ) 
+  .Zero       ( Z         )  ,    // Zero flag from ALU
+  .Negative   ( N         )  ,    // Negative flag from ALU
+  .Overflow   ( V         )  ,    // Overflow flag from ALU
+  .Co         ( C         )  ,    // Carry out flag from ALU
+  .PCSrc      ( PCSrc     )       // 2 bits output flag for PC source
+  );
+
 
   write_back WB(
   .ALUOut  ( ALUOut   ) ,       // ALU output result in EX       

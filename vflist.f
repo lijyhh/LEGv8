@@ -4,7 +4,6 @@ F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\common\\mux2.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\common\\mux4.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\EX\\ALU.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\EX\\ALU_control.v
-F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\EX\\br_control.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\EX\\EX.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\EX\\left_shift.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\EX\\status_reg.v
@@ -13,6 +12,7 @@ F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\ID\\reg_file.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\ID\\sign_extend.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\IF\\IF.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\IF\\inst_mem.v
+F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\MEM\\br_control.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\MEM\\data_mem.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\ALU_control_tb.sv
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\ALU_tb.sv
@@ -27,7 +27,7 @@ F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\sign_extend_tb.sv
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\TOP_tb.sv
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TEST\\write_back_tb.sv
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\control.v
-F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\datapath.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\SingleCycleCPU.v
-F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\TOP.v
+F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\SingleCycleDatapath.v
+F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\TOP\\SingleCycleTOP.v
 F:\\Files\\courses\\Digital_IC\\hw\\prj_improve\\WB\\write_back.v

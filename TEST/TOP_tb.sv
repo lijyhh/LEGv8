@@ -25,10 +25,12 @@
 //
 // Module
 
+`define SINGLE_CYCLE
+
 //`define FACT 
 //`define FACT_1 
-//`define SORT 
-`define SORT_1 
+`define SORT 
+//`define SORT_1 
 
 module TOP_tb();
 
@@ -73,12 +75,21 @@ module TOP_tb();
     tb_rst_n = 1;
   end
 
-  TOP #( 
+`ifdef SINGLE_CYCLE
+  SingleCycleTOP #( 
   .INST_FILE( INST_FILE ),
   .DATA_FILE( DATA_FILE )) TOP_TB(
   .clk  ( tb_clk   )  ,              
   .rst_n( tb_rst_n )            
   );
+`else
+  PipelineTOP #( 
+  .INST_FILE( INST_FILE ),
+  .DATA_FILE( DATA_FILE )) TOP_TB(
+  .clk  ( tb_clk   )  ,              
+  .rst_n( tb_rst_n )            
+  );
+`endif
   
   initial begin
     `TB_BEGIN

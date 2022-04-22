@@ -95,7 +95,7 @@ module SingleCycleCPU(
   .MemtoReg( MemtoReg )            // Flag of MUX in WB to select source data, 1 bit
   );
 
-  datapath data_path(
+  SingleCycleDatapath data_path(
   .clk      ( clk       ),            
   .rst_n    ( rst_n     ),        
   .RegWrite ( RegWrite  ),
@@ -112,7 +112,7 @@ module SingleCycleCPU(
   .r_data   ( r_data    ),
   .pc       ( IAB       ),
   .ALUOut   ( DAB       ),
-  .m_data   ( w_data    )
+  .MemData  ( w_data    )
   );
 
 endmodule

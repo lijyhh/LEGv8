@@ -18,7 +18,7 @@
 
 //
 // Module
-module TOP #(
+module SingleCycleTOP #(
   parameter INST_FILE = `TEST_INST_FILE,
   parameter DATA_FILE = `TEST_DATA_FILE) (
   clk    ,              
