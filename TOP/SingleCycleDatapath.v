@@ -146,9 +146,6 @@ module SingleCycleDatapath(
   .V        ( V         )           // oVerflow
   );
 
-  // MEM is instantiated in TOP module
-
-  // Generate PC source flag
   br_control MEM(
   .BranchOp   ( BranchOp  )  ,    // 3 bits branch operation code from control unit
   .ConBr_type ( inst[4:0] )  ,    // 5 bits conditional branch type of insturction( i.e. rt register of B.cond ) 
