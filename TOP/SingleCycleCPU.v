@@ -105,8 +105,6 @@ module SingleCycleCPU(
   .ALUSrc   ( ALUSrc    ),
   .BranchOp ( BranchOp  ),
   .SregUp   ( SregUp    ),
-  .MemRead  ( MemRead   ),
-  .MemWrite ( MemWrite  ),
   .MemtoReg ( MemtoReg  ),
   .inst     ( IDB       ),
   .r_data   ( r_data    ),

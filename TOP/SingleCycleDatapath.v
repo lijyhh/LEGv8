@@ -34,8 +34,6 @@ module SingleCycleDatapath(
   ALUSrc   ,
   BranchOp ,      // Output from control unit for PCSrc, 3 bits
   SregUp   ,
-  MemRead  ,
-  MemWrite ,
   MemtoReg ,
   inst     ,    
   r_data   ,
@@ -57,8 +55,6 @@ module SingleCycleDatapath(
   input                           ALUSrc   ;
   input    [02: 0]                BranchOp ;
   input                           SregUp   ;                  
-  input                           MemRead  ;
-  input                           MemWrite ;
   input    [01: 0]                MemtoReg ;
   input    [`INST_SIZE - 1 : 0]   inst     ;
   input    [`WORD - 1 : 0]        r_data   ;
@@ -75,8 +71,6 @@ module SingleCycleDatapath(
   wire                            ALUSrc   ;
   wire     [02: 0]                BranchOp ;
   wire                            SregUp   ;                  
-  wire                            MemRead  ;
-  wire                            MemWrite ;
   wire     [01: 0]                MemtoReg ;
   wire     [`INST_SIZE - 1 : 0]   inst     ;
   wire     [`WORD - 1 : 0]        r_data   ;
