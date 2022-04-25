@@ -8,15 +8,15 @@ ADDI SP, XZR, #1020 ; stack pointer pointer to 1020
 ; 12 4th
 BL #6               ; go to sort
 ; 16 5th
-LDUR X9, [x0, #0]   ; v[0]
+LDUR X9, [X0, #0]   ; v[0]
 ; 20 6th
-LDUR X9, [x0, #8]   ; v[1]
+LDUR X9, [X0, #8]   ; v[1]
 ; 24 7th
-LDUR X9, [x0, #16]  ; v[2]
+LDUR X9, [X0, #16]  ; v[2]
 ; 28 8th
-LDUR X9, [x0, #24]  ; v[3]
+LDUR X9, [X0, #24]  ; v[3]
 ; 32 9th
-LDUR X9, [x0, #32]  ; v[4]
+LDUR X9, [X0, #32]  ; v[4]
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 
 ; 41 instructions
