@@ -15,8 +15,8 @@ import re
     NOTE:
     1. Support some other instructions: LSL, BR, MUL, ADDI, SUBS, SUBI, SUBIS, BL, B.cond, CMP, MUL, MOV.
     2. Package this file into a function named as 'single_inst_parse()' in order to parse instructions in batch mode.
-    3. This function is only allow you to use one space to separate each keyword, such as: 'ADD X1, X2, X3' but
-        'ADD  X1,    X2, X3' is not allowed. Also you can ignore space between the two registers, such as:
+    3. This function is not only allow you to use one space to separate each keyword, such as: 'ADD X1, X2, X3' but
+        also 'ADD  X1,    X2, X3' is allowed. Also you can ignore space between the two registers, such as:
         'ADD X1,X2,X3'. Besides, you can use a lowercase letter to name register, such as: 'ADD x1, x2, x3' but
         instruction name must be all uppercase. In fact, you can use other letters to name registers, such as
         'ADD, r1, x2, y3', or just ignore the register name(ADD 1,2,3), we dont really care it.
@@ -28,6 +28,7 @@ import re
     8. You can write 32 bits binary or 32 bits hexadecimal into your files by specify the 'bin', 'BIN' or 'hex', 'HEX'
         in single_inst_parse() func parameter 'base', such as: 'single_inst_parse(raw_instruction, 'bin')'.
     9. We dont support Label in your asm code.
+    10. Support NOP now, NOP should normally be translated as 'MOV XZR, XZR', but here it is translated as 'ADD XZR, XZR, XZR' for convenience.
 
     How to use:
     There are two ways to use: one is input a single instruction each time realized in single_inst_from_keyboard(),
@@ -52,6 +53,11 @@ def trans_inst(insts):
         elif inst == 'CMP':
             insts[i] = inst.replace('CMP', 'SUBS')
             insts.insert(1, 'X31')
+        elif inst == 'NOP':
+            insts[i] = inst.replace('NOP', 'ADD')
+            insts.append('XZR')
+            insts.append('XZR')
+            insts.append('XZR')
         i = i + 1
 
     return insts
@@ -299,8 +305,9 @@ def batch_process_insts(src_file, obj_file, base):
 if __name__ == '__main__':
 
     # Get Instruction from keyboard and display
-    # single_inst_from_keyboard()
+    single_inst_from_keyboard()
 
+"""
     # Process instructions in batch mode
     src_file1 = './data/factorial/factorial.asm'
     obj_file1 = './data/factorial/inst_mem.txt'
@@ -314,3 +321,7 @@ if __name__ == '__main__':
     obj_file3 = './data/bubble_sort/1/inst_mem.txt'
     batch_process_insts(src_file3, obj_file3, 'hex')
 
+    src_file4 = './data/test/pipeline_add2.asm'
+    obj_file4 = './data/test/pipeline_inst_mem.txt'
+    batch_process_insts(src_file4, obj_file4, 'hex')
+"""
