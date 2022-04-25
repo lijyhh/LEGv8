@@ -264,7 +264,7 @@ def read_inst(file):
     for line in fp:
         # Remove comment
         line = line.replace('\n', '')
-        tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9\W]*[\W]*", '', line)
+        tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9\W\S\w\s]*[\W]*", '', line)
         if tmp == '' or tmp == ' ':
             pass
         else:
