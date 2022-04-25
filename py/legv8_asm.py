@@ -264,7 +264,7 @@ def read_inst(file):
     for line in fp:
         # Remove comment
         line = line.replace('\n', '')
-        tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9\W]*[\W]*", '', line)
+        tmp = re.sub(r"[ ]*[;]+[a-zA-Z0-9\W\S\w\s]*[\W]*", '', line)
         if tmp == '' or tmp == ' ':
             pass
         else:
@@ -302,13 +302,9 @@ if __name__ == '__main__':
     # single_inst_from_keyboard()
 
     # Process instructions in batch mode
-    src_file1 = './data/factorial/0_fact3/factorial.asm'
-    obj_file1 = './data/factorial/0_fact3/inst_mem.txt'
+    src_file1 = './data/factorial/factorial.asm'
+    obj_file1 = './data/factorial/inst_mem.txt'
     batch_process_insts(src_file1, obj_file1, 'HEX')
-
-    src_file4 = './data/factorial/1_fact6/factorial.asm'
-    obj_file4 = './data/factorial/1_fact6/inst_mem.txt'
-    batch_process_insts(src_file4, obj_file4, 'HEX')
 
     src_file2 = './data/bubble_sort/0/bubble_sort.asm'
     obj_file2 = './data/bubble_sort/0/inst_mem.txt'
@@ -317,3 +313,4 @@ if __name__ == '__main__':
     src_file3 = './data/bubble_sort/1/bubble_sort.asm'
     obj_file3 = './data/bubble_sort/1/inst_mem.txt'
     batch_process_insts(src_file3, obj_file3, 'hex')
+

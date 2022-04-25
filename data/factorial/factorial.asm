@@ -1,8 +1,11 @@
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 ; 0 1st
-ADDI X0, XZR, #6    ; X0 = 6, i.e. 6!
+ADD X1, XZR, XZR    ; X1 = 0
 ; 4 2nd
-ADDI SP, XZR, #1020 ; Stack pointer point to 1024
+LDUR SP, [X1, #0]   ; Stack pointer point to address in data_mem[0]
+; 8 3rd
+LDUR X0, [X1, #8]   ; X0 = data_mem[1], i.e. The number of data is stored in X0.
+                    ; e.g. fact(6), X0 = 6
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 
 ; 15 instrcutions

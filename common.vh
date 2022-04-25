@@ -15,14 +15,9 @@
 //*******************************
 // Factorial
 // Instruction memory file test 0
-`define FACT_INST_FILE "data/factorial/0_fact3/inst_mem.txt"
+`define FACT_INST_FILE "data/factorial/inst_mem.txt"
 // Data file
-`define FACT_DATA_FILE  "data/factorial/0_fact3/data_mem.txt"
-
-// Instruction memory file test 1
-`define FACT_INST_FILE_1 "data/factorial/1_fact6/inst_mem.txt"
-// Data file
-`define FACT_DATA_FILE_1 "data/factorial/1_fact6/data_mem.txt"
+`define FACT_DATA_FILE  "data/factorial/data_mem.txt"
 
 // Bubble sort test 0
 // Instruction memory file

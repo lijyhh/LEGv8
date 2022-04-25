@@ -27,9 +27,8 @@
 
 `define SINGLE_CYCLE
 
-//`define FACT 
-//`define FACT_1 
-`define SORT 
+`define FACT 
+//`define SORT 
 //`define SORT_1 
 
 module TOP_tb();
@@ -40,9 +39,6 @@ module TOP_tb();
 `ifdef FACT
     parameter INST_FILE = `FACT_INST_FILE;
     parameter DATA_FILE = `FACT_DATA_FILE; 
-`elsif FACT_1
-    parameter INST_FILE = `FACT_INST_FILE_1;
-    parameter DATA_FILE = `FACT_DATA_FILE_1; 
 `elsif SORT
     parameter INST_FILE = `SORT_INST_FILE;
     parameter DATA_FILE = `SORT_DATA_FILE; 
@@ -130,38 +126,51 @@ module TOP_tb();
 
 `ifdef FACT
   
+  // Fact data
+  reg [4:0] tb_fact_data;
+  // Fact result data
+  reg [63:0] tb_fact_res;
+  // Data memory handle
+  integer tb_data_mem_handle;
+
   initial begin
-    $display("\n===== FACTORIAL: 3 =====");
-    $dumpfile("TOP_tb_FACT3.vcd ");
-    $dumpvars();
-  end
+    /******************Modify fact data and result here********************/
 
-  always @(negedge tb_clk) begin
-    // Test 12!
-    //if( tb_w_data == 479001600 ) $strobe("%0d, !!fact12 TEST SUCCESS!!", $time);
+    //tb_fact_data = 3;
+    //tb_fact_res  = 64'h6;
 
-    // Test 3!
-    if( tb_w_data == 6 ) begin
-      $strobe("Time: %0d, Fact(3) = %0d, !!TEST SUCCESS!!", $time, tb_w_data);
-      `TB_END
+    //tb_fact_data = 6;
+    //tb_fact_res  = 64'h2D0;
+
+    tb_fact_data = 20;
+    tb_fact_res  = 64'h21C3_677C_82B4_0000;
+
+    /*********************************************************************/
+
+    // Open file
+    tb_data_mem_handle = $fopen(DATA_FILE, "w");
+    if( tb_data_mem_handle == 0 ) begin
+      $error("File Open Failed!");
       $finish;
     end
-  end
 
-`elsif FACT_1
-  
-  initial begin
-    $display("\n===== FACTORIAL: 6 =====");
-    $dumpfile("TOP_tb_FACT6.vcd ");
+    // Write data to data memory file
+    $fdisplay(tb_data_mem_handle, "%0x", 1024);         // Stack pointer
+    $fdisplay(tb_data_mem_handle, "%0x", tb_fact_data); // Fact data
+
+    // Close data memory file
+    $fclose(tb_data_mem_handle);
+
+    $display("\n===== FACTORIAL: %0d =====", tb_fact_data);
+    $dumpfile("TOP_tb_FACT.vcd ");
     $dumpvars();
   end
 
   always @(negedge tb_clk) begin
-    //Test 6!
-    if( tb_w_data == 720 ) begin
-     $strobe("Time: %0d, Fact(6) = %0d, !!TEST SUCCESS!!", $time, tb_w_data);
-     `TB_END
-     $finish;
+    if( tb_w_data == tb_fact_res ) begin
+      $strobe("Time: %0d, Fact(%0d) = 0x%0x, !!TEST SUCCESS!!", $time, tb_fact_data, tb_w_data);
+      `TB_END
+      $finish;
     end
   end
 
