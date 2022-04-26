@@ -1,8 +1,10 @@
 `ifndef COMMON_HEADER
 `define COMMON_HEADER
+
 //*******************************
 // Definition of data type
 //*******************************
+
 // Size of a WORD
 `define WORD      64
 // Size of a HALF_WORD
@@ -13,11 +15,18 @@
 //*******************************
 // Definition of file path
 //*******************************
+
 // Factorial
-// Instruction memory file test 0
+// Instruction memory file test 
 `define FACT_INST_FILE "data/factorial/inst_mem.txt"
 // Data file
 `define FACT_DATA_FILE  "data/factorial/data_mem.txt"
+
+// Pipeline Factorial
+// Instruction memory file test
+`define PIPELINE_FACT_INST_FILE "data/factorial/pipeline_inst_mem.txt"
+// Data file
+`define PIPELINE_FACT_DATA_FILE  "data/factorial/pipeline_data_mem.txt"
 
 // Bubble sort test 0
 // Instruction memory file
@@ -37,9 +46,15 @@
 // Data memory for test
 `define TEST_DATA_FILE "data/test/data_mem.txt"
 
+// Instruction memory for pipeline test
+`define PIPELINE_TEST_INST_FILE "data/test/pipeline_inst_mem.txt"
+// Data memory for test
+`define PIPELINE_TEST_DATA_FILE "data/test/pipeline_data_mem.txt"
+
 //*******************************
 // Definition of instruction opcode
 //*******************************
+
 `define ADD     11'b10001011000
 `define ADDI    11'b1001000100?
 `define ADDS    11'b10101011000
@@ -86,6 +101,7 @@
 //*******************************
 // Conditional branch rt values
 //*******************************
+
 `define BCOND_NV  5'b00000 // Always, NV exists only to provide a valid disassembly of the ‘00000b’ encoding, and otherwise behaves identically to AL.
 `define BCOND_EQ  5'b00001 // Equal, Z == 1
 `define BCOND_NE  5'b00010 // Not equal, Z == 0
@@ -106,6 +122,7 @@
 //*******************************
 // Conditional branch ops
 //*******************************
+
 `define BCOND_OP_NONE    3'b000
 `define BCOND_OP_BRANCH  3'b001
 `define BCOND_OP_COND    3'b010
@@ -117,6 +134,7 @@
 //*******************************
 // ALU control signals
 //*******************************
+
 `define ALU_AND   4'b0000 
 `define ALU_OR    4'b0001 
 `define ALU_ADD   4'b0010 

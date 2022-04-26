@@ -75,12 +75,12 @@ module reg_file(
   always @( posedge clk or negedge rst_n ) begin
     if( ~rst_n ) begin
       for( i = 0; i < 32; i = i + 1 ) begin
-        reg_memory[i] <= 'd0;
+        reg_memory[i] <= #1 'd0;
       end
     end
     else begin
       if( RegWrite && w_reg != 'd31 ) begin // XZR cannot be written
-        reg_memory[w_reg] <= w_data;
+        reg_memory[w_reg] <= #1 w_data;
       end
     end
   end      

@@ -31,6 +31,7 @@ module ID(
   RegWrite ,       // Flag of writing to register file 
   Reg2Loc  ,       // Flag of judging register file 2nd source register
   WRegLoc  ,       // Flag of judging register file write register
+  w_reg    ,       // Register to be written
   w_data   ,       // Data to be written
   r_data1  ,       // Read data 1 from register file
   r_data2  ,       // Read data 2 from register file
@@ -46,7 +47,8 @@ module ID(
   input   [`INST_SIZE - 1 : 0]    inst    ;                   
   input                           RegWrite;                
   input                           Reg2Loc ;                
-  input                           WRegLoc ;                
+  input                           WRegLoc ; 
+  input   [4:0]                   w_reg   ;
   input   [`WORD - 1 : 0]         w_data  ;                
   output  [`WORD - 1 : 0]         r_data1 ;                   
   output  [`WORD - 1 : 0]         r_data2 ;                
@@ -57,7 +59,8 @@ module ID(
   wire    [`INST_SIZE - 1 : 0]    inst    ;                   
   wire                            RegWrite;                
   wire                            Reg2Loc ;                
-  wire                            WRegLoc ;                
+  wire                            WRegLoc ;  
+  wire    [4:0]                   w_reg   ;
   wire    [`WORD - 1 : 0]         w_data  ;                
   wire    [`WORD - 1 : 0]         r_data1 ;                   
   wire    [`WORD - 1 : 0]         r_data2 ;                
@@ -70,7 +73,7 @@ module ID(
   // Read register
   wire    [4:0]                   r_reg1  ;
   wire    [4:0]                   r_reg2  ;
-  wire    [4:0]                   w_reg   ;
+  wire    [4:0]                   wr_reg  ;
 
   assign r_reg1 = inst[9:5];
 
@@ -84,10 +87,10 @@ module ID(
 
   mux2 #( 
     .SIZE( 5           )) mux2_write_reg(
-    .a   ( inst[4:0]   ), 
+    .a   ( w_reg       ), 
     .b   ( 5'd30       ), // Link register
     .sel ( WRegLoc     ), 
-    .out ( w_reg       ) 
+    .out ( wr_reg      ) 
   );
 
   reg_file reg_file(
@@ -95,7 +98,7 @@ module ID(
   .rst_n   ( rst_n     ) ,        
   .r_reg1  ( r_reg1    ) ,     // Read register 1          
   .r_reg2  ( r_reg2    ) ,     // Read register 2
-  .w_reg   ( w_reg     ) ,     // Write register 
+  .w_reg   ( wr_reg    ) ,     // Write register 
   .w_data  ( w_data    ) ,     // Write data
   .RegWrite( RegWrite  ) ,     // Flag of write register
   .r_data1 ( r_data1   ) ,     // Read data 1

@@ -89,6 +89,7 @@ module SingleCycleDatapath(
   wire     [`WORD - 1 : 0]        r_data1 ;
   wire     [`WORD - 1 : 0]        r_data2 ;
   wire     [`WORD - 1 : 0]        ex_data ;
+  wire     [4:0]                  w_reg   ;
   wire     [`WORD - 1 : 0]        w_data  ;
 
   wire                            N       ;
@@ -97,6 +98,7 @@ module SingleCycleDatapath(
   wire                            C       ;
 
   assign MemData = r_data2;
+  assign w_reg   = inst[4:0];
 
   IF IF( 
   .clk    ( clk       ) ,             
@@ -115,6 +117,7 @@ module SingleCycleDatapath(
   .RegWrite( RegWrite ) ,       // Flag of writing to register file 
   .Reg2Loc ( Reg2Loc  ) ,       // Flag of judging register file 2nd source register
   .WRegLoc ( WRegLoc  ) ,       // Flag of judging register file write register
+  .w_reg   ( w_reg    ) ,       // Register to be written
   .w_data  ( w_data   ) ,       // Data to be written
   .r_data1 ( r_data1  ) ,       // Read data 1 from register file
   .r_data2 ( r_data2  ) ,       // Read data 2 from register file

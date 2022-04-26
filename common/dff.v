@@ -42,10 +42,10 @@ module dff #( parameter SIZE = `WORD )(
 
   always @( posedge clk or negedge rst_n ) begin
     if( ~rst_n ) begin
-      Q <= 'b0;
+      Q <= #1 'b0;
     end
     else begin
-      Q <= D;
+      Q <= #1 D;
     end
   end      
 

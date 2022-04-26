@@ -1,6 +1,6 @@
-::DIR *.v *.vh *.sv /B /S > vflist1.f
-::python py\file_str_replace.py vflist1.f vflist.f
-::del /f/s/q  vflist1.f
+DIR *.v *.vh *.sv /B /S > vflist1.f
+python py\file_str_replace.py vflist1.f vflist.f
+del /f/s/q  vflist1.f
 
 vlib work
 

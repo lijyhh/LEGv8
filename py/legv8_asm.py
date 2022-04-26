@@ -305,9 +305,8 @@ def batch_process_insts(src_file, obj_file, base):
 if __name__ == '__main__':
 
     # Get Instruction from keyboard and display
-    single_inst_from_keyboard()
+    # single_inst_from_keyboard()
 
-"""
     # Process instructions in batch mode
     src_file1 = './data/factorial/factorial.asm'
     obj_file1 = './data/factorial/inst_mem.txt'
@@ -321,7 +320,15 @@ if __name__ == '__main__':
     obj_file3 = './data/bubble_sort/1/inst_mem.txt'
     batch_process_insts(src_file3, obj_file3, 'hex')
 
-    src_file4 = './data/test/pipeline_add2.asm'
+    src_file4 = './data/test/pipeline_test.asm'
     obj_file4 = './data/test/pipeline_inst_mem.txt'
     batch_process_insts(src_file4, obj_file4, 'hex')
-"""
+
+    src_file5 = './data/factorial/pipeline_factorial.asm'
+    obj_file5 = './data/factorial/pipeline_inst_mem.txt'
+    batch_process_insts(src_file5, obj_file5, 'hex')
+
+
+
+
+

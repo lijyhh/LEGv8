@@ -75,7 +75,7 @@ module data_mem #(
   // Write data
   always @( posedge clk ) begin
     if( MemWrite && ~MemRead ) begin
-      data_memory[addr/8] <= data;
+      data_memory[addr/8] <= #1 data;
     end
   end      
 

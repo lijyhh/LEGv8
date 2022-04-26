@@ -36,10 +36,12 @@ module ID_tb();
   wire    [`WORD - 1 : 0]         tb_r_data1 ;                   
   wire    [`WORD - 1 : 0]         tb_r_data2 ;                
   wire    [`WORD - 1 : 0]         tb_ex_data ;
+  wire    [4:0]                   tb_w_reg   ;
 
   reg     [2:0]                   tb_combined_signals;
 
   assign {tb_RegWrite, tb_Reg2Loc, tb_WRegLoc} = tb_combined_signals;
+  assign tb_w_reg = tb_inst[4:0];
 
   initial begin
     tb_clk = 0;
@@ -62,6 +64,7 @@ module ID_tb();
   .RegWrite( tb_RegWrite ) ,       // Flag of writing to register file 
   .Reg2Loc ( tb_Reg2Loc  ) ,       // Flag of judging register file 2nd source register
   .WRegLoc ( tb_WRegLoc  ) ,       // Flag of judging register file write register
+  .w_reg   ( tb_w_reg    ) ,       // Register to be written
   .w_data  ( tb_w_data   ) ,       // Data to be written
   .r_data1 ( tb_r_data1  ) ,       // Read data 1 from register file
   .r_data2 ( tb_r_data2  ) ,       // Read data 2 from register file

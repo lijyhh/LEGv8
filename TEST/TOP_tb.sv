@@ -25,7 +25,7 @@
 //
 // Module
 
-`define SINGLE_CYCLE
+//`define SINGLE_CYCLE
 
 `define FACT 
 //`define SORT 
@@ -37,8 +37,10 @@ module TOP_tb();
   reg                 tb_rst_n ;               
 
 `ifdef FACT
-    parameter INST_FILE = `FACT_INST_FILE;
-    parameter DATA_FILE = `FACT_DATA_FILE; 
+    //parameter INST_FILE = `FACT_INST_FILE;
+    //parameter DATA_FILE = `FACT_DATA_FILE; 
+    parameter INST_FILE = `PIPELINE_FACT_INST_FILE;
+    parameter DATA_FILE = `PIPELINE_FACT_DATA_FILE; 
 `elsif SORT
     parameter INST_FILE = `SORT_INST_FILE;
     parameter DATA_FILE = `SORT_DATA_FILE; 
@@ -46,8 +48,8 @@ module TOP_tb();
     parameter INST_FILE = `SORT_INST_FILE_1;
     parameter DATA_FILE = `SORT_DATA_FILE_1; 
 `else
-    parameter INST_FILE = `TEST_INST_FILE;
-    parameter DATA_FILE = `TEST_DATA_FILE; 
+    parameter INST_FILE = `PIPELINE_TEST_INST_FILE;
+    parameter DATA_FILE = `PIPELINE_TEST_DATA_FILE; 
 `endif
 
   task delay;
@@ -71,39 +73,55 @@ module TOP_tb();
     tb_rst_n = 1;
   end
 
+  wire [`WORD - 1 : 0]         tb_w_data;
+  wire [`INST_SIZE - 1 : 0]    tb_inst;
+  wire [`WORD - 1 : 0]         tb_w_reg;
+
 `ifdef SINGLE_CYCLE
+
   SingleCycleTOP #( 
   .INST_FILE( INST_FILE ),
   .DATA_FILE( DATA_FILE )) TOP_TB(
   .clk  ( tb_clk   )  ,              
   .rst_n( tb_rst_n )            
   );
+
+  assign tb_w_data = TOP_TB.SingleCycleCPU.data_path.WB.w_data;
+  assign tb_inst = TOP_TB.inst;
+  assign tb_w_reg = TOP_TB.SingleCycleCPU.data_path.ID.w_reg;
+
+  initial begin
+    $dumpfile("TOP_tb_FACT_Single_Cycle.vcd ");
+    $dumpvars();    
+  end
+
 `else
+
   PipelineTOP #( 
   .INST_FILE( INST_FILE ),
   .DATA_FILE( DATA_FILE )) TOP_TB(
   .clk  ( tb_clk   )  ,              
   .rst_n( tb_rst_n )            
   );
+
+  assign tb_w_data = TOP_TB.PipelineCPU.data_path.WB.w_data;
+  assign tb_inst = TOP_TB.inst;
+  assign tb_w_reg = TOP_TB.PipelineCPU.data_path.ID.w_reg;
+
+  initial begin
+    $dumpfile("TOP_tb_FACT_Pipeline.vcd ");
+    $dumpvars();    
+  end
+
 `endif
   
   initial begin
     `TB_BEGIN
-    delay(500);
+    delay(1000);
     $finish;
   end
 
-  wire [`WORD - 1 : 0]         tb_w_data;
-  assign tb_w_data = TOP_TB.SingleCycleCPU.data_path.WB.w_data;
-  
-  wire [`INST_SIZE - 1 : 0]    tb_inst;
-  assign tb_inst = TOP_TB.inst;
-
-  wire [`WORD - 1 : 0]         tb_w_reg;
-  assign tb_w_reg = TOP_TB.SingleCycleCPU.data_path.ID.w_reg;
-
   reg  [`WORD - 1 : 0]         tb_v[8:0];
-
   integer j;
 
   task my_assert;
@@ -122,10 +140,7 @@ module TOP_tb();
     end
   endtask
 
-
-
 `ifdef FACT
-  
   // Fact data
   reg [4:0] tb_fact_data;
   // Fact result data
@@ -155,15 +170,16 @@ module TOP_tb();
     end
 
     // Write data to data memory file
-    $fdisplay(tb_data_mem_handle, "%0x", 1024);         // Stack pointer
+    $fdisplay(tb_data_mem_handle, "%0x", 1023*8);         // Stack pointer
     $fdisplay(tb_data_mem_handle, "%0x", tb_fact_data); // Fact data
+    for( j = 0; j < 1024 - 2; j = j + 1 ) begin
+      $fdisplay(tb_data_mem_handle, "%0x", 0); // Others = 0
+    end
 
     // Close data memory file
     $fclose(tb_data_mem_handle);
 
     $display("\n===== FACTORIAL: %0d =====", tb_fact_data);
-    $dumpfile("TOP_tb_FACT.vcd ");
-    $dumpvars();
   end
 
   always @(negedge tb_clk) begin
@@ -264,6 +280,21 @@ module TOP_tb();
         $finish;
       end
     endcase
+  end
+
+`else  
+  initial begin
+    $display("\n===== PIPELINE TEST =====");
+    $dumpfile("TOP_tb_Pipeline_test.vcd ");
+    $dumpvars();
+  end
+
+  initial begin
+    wait( tb_w_data == 3 )  $strobe("tb_w_data = %0d", tb_w_data);
+    wait( tb_w_data == 4 )  $strobe("tb_w_data = %0d", tb_w_data);
+    delay(1);
+    `TB_END
+    $finish;
   end
 
 `endif

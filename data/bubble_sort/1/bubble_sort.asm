@@ -28,7 +28,7 @@ LDUR X9, [X0, #64]  ; v[8]
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 
 ; 41 instructions
-; 0 sort 1st
+; 0 1st sort
 SUBI SP, SP, #40    ; make room on stack for 5 registers
 ; 4 2nd
 STUR X30, [SP, #32] ; save LR on stack
@@ -48,14 +48,14 @@ MOV X22, X1         ; copy parameter X1 into X22
 
 ; 32 9th
 MOV X19, XZR        ; i = 0
-; 36 for1tst 10th
+; 36 10th for1tst
 CMP X19, X22         ; compare X19 to X22 (i to n)
 ; 40 11th
 B.GE #17            ; go to exit1 if X19 >= X22 (i >= n)
 
 ; 44 12th
 SUBI X20, X19, #1   ; j = i - 1
-; 48 for2tst 13th
+; 48 13th for2tst
 CMP X20, XZR        ; compare X20 to 0 (j to 0)
 ; 52 14th
 B.LT #12            ; go to exit2 if X20 < 0 (j < 0)
@@ -84,12 +84,12 @@ SUBI X20, X20, #1   ; j -= 1
 ; 96 25th
 B #-12              ; branch to test of inner loop( for2tst )
 
-; 100 exit2 26th
+; 100 26th exit2
 ADDI X19, X19, #1   ; i += 1
 ; 104 27th
 B #-17              ; branch to test of outer loop( for1tst )
 
-; 108 exit1 28th
+; 108 28th exit1
 LDUR X19, [SP, #0]  ; restore X19 from stack
 ; 112 29th
 LDUR X20, [SP, #8]  ; restore X20 from stack
@@ -105,7 +105,7 @@ ADDI SP, SP, #40    ; restore stack pointer
 ; 132 34th
 BR LR               ; return to calling routine
 
-; 136 swap 35th
+; 136 35th swap
 LSL X10, X1, #3     ; reg X10 = k * 8
 ; 140 36th
 ADD X10, X0, X10    ; reg X10 = v + (k * 8)
