@@ -20,7 +20,8 @@
 // Module
 module SingleCycleTOP #(
   parameter INST_FILE = `TEST_INST_FILE,
-  parameter DATA_FILE = `TEST_DATA_FILE) (
+  parameter DATA_FILE = `TEST_DATA_FILE,
+  parameter SIZE = 1024) (
   clk    ,              
   rst_n            
   );
@@ -58,7 +59,7 @@ module SingleCycleTOP #(
 
   data_mem #( 
   .PATH    ( DATA_FILE )  , 
-  .SIZE    ( 1024      )  ) MEM(
+  .SIZE    ( SIZE      )  ) MEM(
   .clk     ( clk       )  ,
   .MemRead ( MemRead   )  ,     // Signal of reading data from memory
   .MemWrite( MemWrite  )  ,     // Signal of writing data to memory

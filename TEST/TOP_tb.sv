@@ -25,16 +25,18 @@
 //
 // Module
 
-//`define SINGLE_CYCLE
+`define SINGLE_CYCLE
 
-`define FACT 
-//`define SORT 
+//`define FACT 
+`define SORT 
 //`define SORT_1 
 
 module TOP_tb();
 
   reg                 tb_clk   ;                      
   reg                 tb_rst_n ;               
+
+  parameter MEM_SIZE = 1024;
 
 `ifdef FACT
     //parameter INST_FILE = `FACT_INST_FILE;
@@ -74,14 +76,21 @@ module TOP_tb();
   end
 
   wire [`WORD - 1 : 0]         tb_w_data;
-  wire [`INST_SIZE - 1 : 0]    tb_inst;
-  wire [`WORD - 1 : 0]         tb_w_reg;
+  wire [`INST_SIZE - 1 : 0]    tb_inst  ;
+  wire [`WORD - 1 : 0]         tb_w_reg ;
+
+  wire                         tb_MemWrite;
+  wire                         tb_MemRead ;
+  wire [`WORD - 1 : 0]         tb_data    ;
+  wire [`WORD - 1 : 0]         tb_addr    ;
+  reg  [`WORD - 1 : 0]         tb_data_memory[MEM_SIZE - 1 : 0];
 
 `ifdef SINGLE_CYCLE
 
   SingleCycleTOP #( 
   .INST_FILE( INST_FILE ),
-  .DATA_FILE( DATA_FILE )) TOP_TB(
+  .DATA_FILE( DATA_FILE ),
+  .SIZE     ( MEM_SIZE  )) TOP_TB(
   .clk  ( tb_clk   )  ,              
   .rst_n( tb_rst_n )            
   );
@@ -90,16 +99,12 @@ module TOP_tb();
   assign tb_inst = TOP_TB.inst;
   assign tb_w_reg = TOP_TB.SingleCycleCPU.data_path.ID.w_reg;
 
-  initial begin
-    $dumpfile("TOP_tb_FACT_Single_Cycle.vcd ");
-    $dumpvars();    
-  end
-
 `else
 
   PipelineTOP #( 
   .INST_FILE( INST_FILE ),
-  .DATA_FILE( DATA_FILE )) TOP_TB(
+  .DATA_FILE( DATA_FILE ),
+  .SIZE     ( MEM_SIZE  )) TOP_TB(
   .clk  ( tb_clk   )  ,              
   .rst_n( tb_rst_n )            
   );
@@ -107,11 +112,6 @@ module TOP_tb();
   assign tb_w_data = TOP_TB.PipelineCPU.data_path.WB.w_data;
   assign tb_inst = TOP_TB.inst;
   assign tb_w_reg = TOP_TB.PipelineCPU.data_path.ID.w_reg;
-
-  initial begin
-    $dumpfile("TOP_tb_FACT_Pipeline.vcd ");
-    $dumpvars();    
-  end
 
 `endif
   
@@ -141,6 +141,13 @@ module TOP_tb();
   endtask
 
 `ifdef FACT
+
+  initial begin
+    //$dumpfile("TOP_tb_FACT_Single_Cycle.vcd ");
+    $dumpfile("TOP_tb_FACT_Pipeline.vcd ");
+    $dumpvars();    
+  end
+
   // Fact data
   reg [4:0] tb_fact_data;
   // Fact result data
@@ -192,41 +199,54 @@ module TOP_tb();
 
 `elsif SORT
   
+  
+  // Write data
+  always @( posedge tb_clk ) begin
+    if( tb_MemWrite && ~tb_MemRead ) begin
+      tb_data_memory[tb_addr/8] <= #1 tb_data;
+      //直接￥displauy？不用这些信号好像
+    end
+  end      
+
   initial begin
     $display("\n===== BUBBLE SORT =====");
-    $dumpfile("TOP_tb_SORT.vcd ");
+    $dumpfile("TOP_tb_SORT_Single_Cycle.vcd ");
+    //$dumpfile("TOP_tb_SORT_Pipeline.vcd ");
     $dumpvars();
   end
 
   always@(negedge tb_clk) begin
-    case( tb_inst )
-      'hf8400009: begin // v[0]
-        my_assert(1, 9, tb_v[0], 0);
-      end
-      'hf8408009: begin // v[1]
-        my_assert(2, 9, tb_v[1], 1);
-      end
-      'hf8410009: begin // v[2]
-        my_assert('h27, 9, tb_v[2], 2);
-      end
-      'hf8418009: begin // v[3]
-        my_assert('h45, 9, tb_v[3], 3);
-      end
-      'hf8420009: begin // v[4]
-        my_assert('h99, 9, tb_v[4], 4);
+    wait( tb_inst == 'hf8400009) begin // v[0]
+      #1;
+      my_assert(1, 9, tb_v[0], 0);
+    end
+    wait( tb_inst == 'hf8408009) begin // v[1]
+      #1;
+      my_assert(2, 9, tb_v[1], 1);
+    end
+    wait( tb_inst == 'hf8410009) begin // v[2]
+      #1;
+      my_assert('h27, 9, tb_v[2], 2);
+    end
+    wait( tb_inst == 'hf8418009) begin // v[3]
+      #1;
+      my_assert('h45, 9, tb_v[3], 3);
+    end
+    wait( tb_inst == 'hf8420009) begin // v[4]
+      #1;
+      my_assert('h99, 9, tb_v[4], 4);
 
-        // Display result
-        #1 $write("tb_v is( HEX format ): ");
-        #1;
-        for( j = 0; j < 5; j = j + 1 ) begin
-          $write("%0h ", tb_v[j]);
-        end
-        #1 $strobe("");
-
-        `TB_END
-        $finish;
+      // Display result
+      #1 $write("tb_v is( HEX format ): ");
+      #1;
+      for( j = 0; j < 5; j = j + 1 ) begin
+        $write("%0h ", tb_v[j]);
       end
-    endcase
+      #1 $strobe("");
+    end
+
+    `TB_END
+    $finish;
   end
 
 `elsif SORT_1

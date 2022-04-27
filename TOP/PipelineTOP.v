@@ -22,7 +22,8 @@
 // Module
 module PipelineTOP #(
   parameter INST_FILE = `TEST_INST_FILE,
-  parameter DATA_FILE = `TEST_DATA_FILE) (
+  parameter DATA_FILE = `TEST_DATA_FILE,
+  parameter SIZE = 1024) (
   clk    ,              
   rst_n            
   );
@@ -60,7 +61,7 @@ module PipelineTOP #(
 
   data_mem #( 
   .PATH    ( DATA_FILE )  , 
-  .SIZE    ( 1024      )  ) data_mem(
+  .SIZE    ( SIZE      )  ) data_mem(
   .clk     ( clk       )  ,
   .MemRead ( MemRead   )  ,     // Signal of reading data from memory
   .MemWrite( MemWrite  )  ,     // Signal of writing data to memory
