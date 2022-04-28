@@ -27,4 +27,4 @@ vlog -sv -f vflist.f
 
 vsim -c -novopt work.TOP_tb -do "run -all"
 
-pause
+::pause

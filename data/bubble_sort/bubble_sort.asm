@@ -7,26 +7,10 @@ LDUR SP, [X10, #0]  ; Stack pointer point to address in data_mem[0]
 LDUR X1, [X10, #8]  ; Number of data to be sorted
 ; 12 4th
 LDUR X0, [X10, #16] ; Base address of v
-
-
-; 0 1st
-;ADDI X0, XZR, #8    ; data memory[1]
-;; 4 2nd
-;ADDI X1, XZR, #5    ; 5 values to be sorted
-;; 8 3rd
-;ADDI SP, XZR, #1020 ; stack pointer pointer to 1020
-;; 12 4th
-;BL #6               ; go to sort
-;; 16 5th
-;LDUR X9, [X0, #0]   ; v[0]
-;; 20 6th
-;LDUR X9, [X0, #8]   ; v[1]
-;; 24 7th
-;LDUR X9, [X0, #16]  ; v[2]
-;; 28 8th
-;LDUR X9, [X0, #24]  ; v[3]
-;; 32 9th
-;LDUR X9, [X0, #32]  ; v[4]
+; 16 5th
+BL #2               ; Go to sort
+; 20 6th
+B #0                ; Jump in place
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 
 ; 41 instructions

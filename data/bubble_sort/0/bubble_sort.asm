@@ -1,15 +1,5 @@
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 ; 0 1st
-;ADD X10, XZR, XZR   ; X10 = 0, first address of data memory
-;; 4 2nd
-;LDUR SP, [X10, #0]  ; Stack pointer point to address in data_mem[0]
-;; 8 3rd
-;LDUR X1, [X10, #8]  ; Number of data to be sorted
-;; 12 4th
-;LDUR X0, [X10, #16] ; Base address of v
-
-
-; 0 1st
 ADDI X0, XZR, #8    ; data memory[1]
 ; 4 2nd
 ADDI X1, XZR, #5    ; 5 values to be sorted

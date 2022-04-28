@@ -19,15 +19,15 @@
 import os  
 import random 
 
-num_data = 5
-max_range = 10
+num_data = 100
+max_range = 1000000
 sep = '\n'
 base = 16
 
 # Values in LEGv8 registers
 SP = str(1023*8)
 X1 = str(num_data)
-X0 = str(2*8)
+X0 = str(3*8)
 
 
 random_data_file = './data/bubble_sort/data_mem.txt'
@@ -124,7 +124,4 @@ random_sort()
 insert_line(random_data_file, 0, SP)
 insert_line(random_data_file, 1, X1)
 insert_line(random_data_file, 2, X0)
-insert_line(random_data_file_sort, 0, SP)
-insert_line(random_data_file_sort, 1, X1)
-insert_line(random_data_file_sort, 2, X0)
-print("Done!")
+print("Random generation done!")

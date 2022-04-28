@@ -328,6 +328,11 @@ if __name__ == '__main__':
     obj_file5 = './data/factorial/pipeline_inst_mem.txt'
     batch_process_insts(src_file5, obj_file5, 'hex')
 
+    src_file6 = './data/bubble_sort/bubble_sort.asm'
+    obj_file6 = './data/bubble_sort/inst_mem.txt'
+    batch_process_insts(src_file6, obj_file6, 'hex')
+
+
 
 
 

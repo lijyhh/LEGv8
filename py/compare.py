@@ -1,7 +1,7 @@
 import os  
 
-random_data_file = './data/bubble_sort/data_mem.txt'
-random_data_file_sort = './data/bubble_sort/data_mem_sort.txt'
+random_data_file_tb_sort = './data/bubble_sort/data_mem_tb_sort.txt'
+random_data_file_py_sort = './data/bubble_sort/data_mem_sort.txt'
 
 def cmp_file(f1, f2):
     st1 = os.stat(f1)
@@ -21,4 +21,5 @@ def cmp_file(f1, f2):
             if not b1:
                 return True
 
-print("Sort " + str(cmp_file(random_data_file, random_data_file_sort)))
+print("Compare Done! Sort " + str(cmp_file(random_data_file_tb_sort, random_data_file_py_sort)) + "!")
+

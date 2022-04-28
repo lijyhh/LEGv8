@@ -36,7 +36,10 @@ module TOP_tb();
   reg                 tb_clk   ;                      
   reg                 tb_rst_n ;               
 
-  parameter MEM_SIZE = 1024;
+  // 
+  // Parameter definition
+
+  parameter MEM_SIZE = 1024; // Data memory depth
 
 `ifdef FACT
     //parameter INST_FILE = `FACT_INST_FILE;
@@ -44,8 +47,11 @@ module TOP_tb();
     parameter INST_FILE = `PIPELINE_FACT_INST_FILE;
     parameter DATA_FILE = `PIPELINE_FACT_DATA_FILE; 
 `elsif SORT
-    parameter INST_FILE = `SORT_INST_FILE;
-    parameter DATA_FILE = `SORT_DATA_FILE; 
+    //parameter INST_FILE = `SORT_INST_FILE;
+    //parameter DATA_FILE = `SORT_DATA_FILE; 
+    parameter INST_FILE = "./data/bubble_sort/inst_mem.txt";
+    parameter DATA_FILE = "./data/bubble_sort/data_mem.txt"; 
+    parameter DATA_FILE_TB_SORT = "./data/bubble_sort/data_mem_tb_sort.txt"; 
 `elsif SORT_1
     parameter INST_FILE = `SORT_INST_FILE_1;
     parameter DATA_FILE = `SORT_DATA_FILE_1; 
@@ -54,6 +60,8 @@ module TOP_tb();
     parameter DATA_FILE = `PIPELINE_TEST_DATA_FILE; 
 `endif
 
+  // 
+  // Task of delay num cycles
   task delay;
     input [31:0] num;
     begin
@@ -62,6 +70,8 @@ module TOP_tb();
     end
   endtask
 
+  //
+  // Generation of clock and reset signals 
   initial begin
     tb_clk = 0;
   end
@@ -75,15 +85,23 @@ module TOP_tb();
     tb_rst_n = 1;
   end
 
-  wire [`WORD - 1 : 0]         tb_w_data;
-  wire [`INST_SIZE - 1 : 0]    tb_inst  ;
-  wire [`WORD - 1 : 0]         tb_w_reg ;
+  // 
+  // Some test signals
+  wire [`WORD - 1 : 0]         tb_w_data;   // Write back data in WB stage
+  wire [`INST_SIZE - 1 : 0]    tb_inst  ;   // Instruction
+  wire [`WORD - 1 : 0]         tb_w_reg ;   // Write register in ID stage
 
-  wire                         tb_MemWrite;
+  wire                         tb_MemWrite; // 
   wire                         tb_MemRead ;
   wire [`WORD - 1 : 0]         tb_data    ;
   wire [`WORD - 1 : 0]         tb_addr    ;
-  reg  [`WORD - 1 : 0]         tb_data_memory[MEM_SIZE - 1 : 0];
+
+  assign tb_MemWrite = TOP_TB.data_mem.MemWrite;
+  assign tb_MemRead = TOP_TB.data_mem.MemRead;
+  assign tb_data = TOP_TB.data_mem.data;
+
+  // 
+  // Module instantiation
 
 `ifdef SINGLE_CYCLE
 
@@ -115,15 +133,19 @@ module TOP_tb();
 
 `endif
   
+  // 
+  // Test begin
   initial begin
-    `TB_BEGIN
-    delay(1000);
+    delay(10000000);
     $finish;
   end
 
-  reg  [`WORD - 1 : 0]         tb_v[8:0];
-  integer j;
+  // 
+  // Used for sort test
+  reg  [`WORD - 1 : 0]         tb_v[8:0]; // Array v in testbench
+  integer j;                              // Variable in loop to print value in 
 
+  // Assert sorted data
   task my_assert;
     input  [`WORD - 1 : 0] w_data;
     input  [`WORD - 1 : 0] w_reg;
@@ -132,28 +154,43 @@ module TOP_tb();
     begin
       assert( tb_w_data == w_data && tb_w_reg == w_reg ) begin
           v = w_data;
-          $strobe("Time: %0d, !!v[%0d] = %0h TEST SUCCESS!!", $time, i, tb_w_data);
+          $strobe("Time: %0d, !!v[%0d] = 0x%0h TEST SUCCESS!!", $time, i, tb_w_data);
       end
       else begin
-        $error("tb_w_data = %0d", tb_w_data);
+        $error("[%0d], tb_w_data = 0x%0h", i, tb_w_data);
       end
     end
   endtask
 
+  // 
+  // Data memory handle
+  integer tb_data_mem_handle;
+
+  //
+  // Test FACT/SORT
 `ifdef FACT
 
+  // Open file
   initial begin
+    tb_data_mem_handle = $fopen(DATA_FILE, "w");
+    if( tb_data_mem_handle == 0 ) begin
+      $error("File Open Failed!");
+      $finish;
+    end
+  end
+
+  // Save waveform
+  initial begin
+    `TB_BEGIN
     //$dumpfile("TOP_tb_FACT_Single_Cycle.vcd ");
     $dumpfile("TOP_tb_FACT_Pipeline.vcd ");
     $dumpvars();    
   end
 
-  // Fact data
+  // Fact data to be calculated
   reg [4:0] tb_fact_data;
   // Fact result data
   reg [63:0] tb_fact_res;
-  // Data memory handle
-  integer tb_data_mem_handle;
 
   initial begin
     /******************Modify fact data and result here********************/
@@ -169,19 +206,9 @@ module TOP_tb();
 
     /*********************************************************************/
 
-    // Open file
-    tb_data_mem_handle = $fopen(DATA_FILE, "w");
-    if( tb_data_mem_handle == 0 ) begin
-      $error("File Open Failed!");
-      $finish;
-    end
-
     // Write data to data memory file
-    $fdisplay(tb_data_mem_handle, "%0x", 1023*8);         // Stack pointer
-    $fdisplay(tb_data_mem_handle, "%0x", tb_fact_data); // Fact data
-    for( j = 0; j < 1024 - 2; j = j + 1 ) begin
-      $fdisplay(tb_data_mem_handle, "%0x", 0); // Others = 0
-    end
+    $fdisplay(tb_data_mem_handle, "%0x", ( MEM_SIZE - 1 )*8);         // Stack pointer,
+    $fdisplay(tb_data_mem_handle, "%0x", tb_fact_data);   // Fact data
 
     // Close data memory file
     $fclose(tb_data_mem_handle);
@@ -199,22 +226,47 @@ module TOP_tb();
 
 `elsif SORT
   
+  reg [63:0] tb_num_data;
   
-  // Write data
-  always @( posedge tb_clk ) begin
-    if( tb_MemWrite && ~tb_MemRead ) begin
-      tb_data_memory[tb_addr/8] <= #1 tb_data;
-      //直接￥displauy？不用这些信号好像
-    end
-  end      
+  initial begin
+    tb_num_data = 64'd100;
+    tb_data_mem_handle = $fopen(DATA_FILE_TB_SORT, "w");
+    if( tb_data_mem_handle == 0 ) begin
+      $error("File Open Failed!");
+      $finish;
+    end    
+  end
 
+  // Save waveform
   initial begin
     $display("\n===== BUBBLE SORT =====");
+    `TB_BEGIN
+    $display("Sorting...");
     $dumpfile("TOP_tb_SORT_Single_Cycle.vcd ");
     //$dumpfile("TOP_tb_SORT_Pipeline.vcd ");
     $dumpvars();
   end
+  // Open file
+  initial begin
+    //$system("python py/random_gen.py");
+    // Wait 'B #0'
+    wait( tb_inst == 'h14000000 ) begin
+      delay(1);
+      $display("Sort Done!");
+      for( j = 0; j < tb_num_data; j = j + 1 ) begin
+        $fdisplay(tb_data_mem_handle, "%0h", TOP_TB.data_mem.data_memory[j+3]);
+        delay(1);
+      end
+    end
+    $fclose(tb_data_mem_handle);
+    $display("\nComparing...");
+    $system("python py/compare.py");
+    `TB_END
+    $finish;
+  end
 
+/*
+  // Check result using my_assert
   always@(negedge tb_clk) begin
     wait( tb_inst == 'hf8400009) begin // v[0]
       #1;
@@ -243,11 +295,12 @@ module TOP_tb();
         $write("%0h ", tb_v[j]);
       end
       #1 $strobe("");
+      delay(1);
+      $finish;
     end
-
-    `TB_END
-    $finish;
   end
+*/
+
 
 `elsif SORT_1
   
