@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;; Used for test ;;;;;;;;;;;;;;;
 ; 0 1st
-ADD X10, XZR, XZR   ; X10 = 0, first address of data memory
+MOV X10, XZR        ; X10 = 0, first address of data memory
 ; 4 2nd
 LDUR SP, [X10, #0]  ; Stack pointer point to address in data_mem[0]
 ; 8 3rd
