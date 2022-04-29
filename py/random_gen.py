@@ -30,8 +30,11 @@ X1 = str(num_data)
 X0 = str(3*8)
 
 
-random_data_file = './data/bubble_sort/data_mem.txt'
-random_data_file_sort = './data/bubble_sort/data_mem_sort.txt'
+# random_data_file = './data/bubble_sort/SingleCycle/data_mem.txt'
+# random_data_file_sort = './data/bubble_sort/SingleCycle/data_mem_py_sorted.txt'
+
+random_data_file = './data/bubble_sort/Pipeline/data_mem.txt'
+random_data_file_sort = './data/bubble_sort/Pipeline/data_mem_py_sorted.txt'
 
 # Random data generation
 def random_gen():

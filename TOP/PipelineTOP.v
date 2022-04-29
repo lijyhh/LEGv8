@@ -21,8 +21,8 @@
 //
 // Module
 module PipelineTOP #(
-  parameter INST_FILE = `TEST_INST_FILE,
-  parameter DATA_FILE = `TEST_DATA_FILE,
+  parameter INST_FILE = `PIPELINE_TEST_INST_FILE,
+  parameter DATA_FILE = `PIPELINE_TEST_DATA_FILE,
   parameter SIZE = 1024) (
   clk    ,              
   rst_n            

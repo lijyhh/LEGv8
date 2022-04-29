@@ -26,7 +26,7 @@
 // Module
 module data_mem_tb();
   
-  parameter DATA_FILE = `TEST_DATA_FILE;
+  parameter DATA_FILE = `SINGLE_CYCLE_TEST_DATA_FILE;
   
   reg                             tb_clk     ;                  
   reg                             tb_MemRead ;                   

@@ -28,7 +28,7 @@
 //
 // Module
 module data_mem #( 
-  parameter PATH = `TEST_DATA_FILE, 
+  parameter PATH = `SINGLE_CYCLE_TEST_INST_FILE, 
   parameter SIZE = 1024) (
   clk       ,              
   MemRead   ,     // Signal of reading data from memory

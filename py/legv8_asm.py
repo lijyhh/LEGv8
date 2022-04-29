@@ -29,6 +29,7 @@ import re
         in single_inst_parse() func parameter 'base', such as: 'single_inst_parse(raw_instruction, 'bin')'.
     9. We dont support Label in your asm code.
     10. Support NOP now, NOP should normally be translated as 'MOV XZR, XZR', but here it is translated as 'ADD XZR, XZR, XZR' for convenience.
+    11. Support MOV now, you can move a register data into another register( MOV X2, X1 ) or move a immediate data into a register( MOV X2, #1 ).
 
     How to use:
     There are two ways to use: one is input a single instruction each time realized in single_inst_from_keyboard(),
@@ -48,11 +49,16 @@ def trans_inst(insts):
         elif inst == 'XZR':
             insts[i] = inst.replace('XZR', 'X31')
         elif inst == 'MOV':
-            insts[i] = inst.replace('MOV', 'ADDI')
-            insts.append('#0')
+            for j in insts:
+                if '#' in j:
+                    insts[i] = inst.replace('MOV', 'ADDI')
+                    break;
+                else:
+                    insts[i] = inst.replace('MOV', 'ADD')
+            insts.insert(2, 'XZR')
         elif inst == 'CMP':
             insts[i] = inst.replace('CMP', 'SUBS')
-            insts.insert(1, 'X31')
+            insts.insert(1, 'XZR')
         elif inst == 'NOP':
             insts[i] = inst.replace('NOP', 'ADD')
             insts.append('XZR')
@@ -308,30 +314,30 @@ if __name__ == '__main__':
     # single_inst_from_keyboard()
 
     # Process instructions in batch mode
-    src_file1 = './data/factorial/factorial.asm'
-    obj_file1 = './data/factorial/inst_mem.txt'
+    src_file1 = './data/factorial/SingleCycle/factorial.asm'
+    obj_file1 = './data/factorial/SingleCycle/inst_mem.txt'
+    print("\nCurrent file is: ", src_file1)
     batch_process_insts(src_file1, obj_file1, 'HEX')
 
-    src_file2 = './data/bubble_sort/0/bubble_sort.asm'
-    obj_file2 = './data/bubble_sort/0/inst_mem.txt'
+    src_file2 = './data/factorial/Pipeline/factorial.asm'
+    obj_file2 = './data/factorial/Pipeline/inst_mem.txt'
+    print("\nCurrent file is: ", src_file2)
     batch_process_insts(src_file2, obj_file2, 'hex')
 
-    src_file3 = './data/bubble_sort/1/bubble_sort.asm'
-    obj_file3 = './data/bubble_sort/1/inst_mem.txt'
+    src_file3 = './data/bubble_sort/SingleCycle/bubble_sort.asm'
+    obj_file3 = './data/bubble_sort/SingleCycle/inst_mem.txt'
+    print("\nCurrent file is: ", src_file3)
     batch_process_insts(src_file3, obj_file3, 'hex')
 
-    src_file4 = './data/test/pipeline_test.asm'
-    obj_file4 = './data/test/pipeline_inst_mem.txt'
+    src_file4 = './data/bubble_sort/Pipeline/bubble_sort.asm'
+    obj_file4 = './data/bubble_sort/Pipeline/inst_mem.txt'
+    print("\nCurrent file is: ", src_file4)
     batch_process_insts(src_file4, obj_file4, 'hex')
 
-    src_file5 = './data/factorial/pipeline_factorial.asm'
-    obj_file5 = './data/factorial/pipeline_inst_mem.txt'
+    src_file5 = './data/bubble_sort/0/bubble_sort.asm'
+    obj_file5 = './data/bubble_sort/0/inst_mem.txt'
+    print("\nCurrent file is: ", src_file5)
     batch_process_insts(src_file5, obj_file5, 'hex')
-
-    src_file6 = './data/bubble_sort/bubble_sort.asm'
-    obj_file6 = './data/bubble_sort/inst_mem.txt'
-    batch_process_insts(src_file6, obj_file6, 'hex')
-
 
 
 

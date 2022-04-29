@@ -19,8 +19,8 @@
 //
 // Module
 module SingleCycleTOP #(
-  parameter INST_FILE = `TEST_INST_FILE,
-  parameter DATA_FILE = `TEST_DATA_FILE,
+  parameter INST_FILE = `SINGLE_CYCLE_TEST_INST_FILE,
+  parameter DATA_FILE = `SINGLE_CYCLE_TEST_DATA_FILE,
   parameter SIZE = 1024) (
   clk    ,              
   rst_n            

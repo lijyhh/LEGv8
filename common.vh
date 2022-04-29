@@ -16,40 +16,56 @@
 // Definition of file path
 //*******************************
 
-// Factorial
-// Instruction memory file test 
-`define FACT_INST_FILE "data/factorial/inst_mem.txt"
+/////////////////////////////////
+// Single Cycle Factorial
+// Instruction memory file 
+`define SINGLE_CYCLE_FACT_INST_FILE "data/factorial/SingleCycle/inst_mem.txt"
 // Data file
-`define FACT_DATA_FILE  "data/factorial/data_mem.txt"
+`define SINGLE_CYCLE_FACT_DATA_FILE  "data/factorial/SingleCycle/data_mem.txt"
+
 
 // Pipeline Factorial
-// Instruction memory file test
-`define PIPELINE_FACT_INST_FILE "data/factorial/pipeline_inst_mem.txt"
+// Instruction memory file
+`define PIPELINE_FACT_INST_FILE "data/factorial/Pipeline/inst_mem.txt"
 // Data file
-`define PIPELINE_FACT_DATA_FILE  "data/factorial/pipeline_data_mem.txt"
+`define PIPELINE_FACT_DATA_FILE  "data/factorial/Pipeline/data_mem.txt"
 
+/////////////////////////////////
+// Single Cycle Bubble Sort
+// Instruction memory file
+`define SINGLE_CYCLE_SORT_INST_FILE "data/bubble_sort/SingleCycle/inst_mem.txt"
+// Data file
+`define SINGLE_CYCLE_SORT_DATA_FILE  "data/bubble_sort/SingleCycle/data_mem.txt"
+// Data file TB sorted
+`define SINGLE_CYCLE_SORT_DATA_FILE_TB  "data/bubble_sort/SingleCycle/data_mem_tb_sorted.txt"
+
+// Pipeline Bubble Sort
+// Instruction memory file
+`define PIPELINE_SORT_INST_FILE "data/bubble_sort/Pipeline/inst_mem.txt"
+// Data file
+`define PIPELINE_SORT_DATA_FILE  "data/bubble_sort/Pipeline/data_mem.txt"
+// Data file TB sorted
+`define PIPELINE_SORT_DATA_FILE_TB  "data/bubble_sort/Pipeline/data_mem_tb_sorted.txt"
+
+/////////////////////////////////
 // Bubble sort test 0
 // Instruction memory file
 `define SORT_INST_FILE "data/bubble_sort/0/inst_mem.txt"
 // Data file
 `define SORT_DATA_FILE  "data/bubble_sort/0/data_mem.txt"
 
-// Bubble sort test 1
+/////////////////////////////////
+// Single Cycle Test
 // Instruction memory file
-`define SORT_INST_FILE_1 "data/bubble_sort/1/inst_mem.txt"
-// Data file
-`define SORT_DATA_FILE_1  "data/bubble_sort/1/data_mem.txt"
-
-// Test
-// Instruction memory for test
-`define TEST_INST_FILE "data/test/inst_mem.txt"
+`define SINGLE_CYCLE_TEST_INST_FILE "data/test/SingleCycle/inst_mem.txt"
 // Data memory for test
-`define TEST_DATA_FILE "data/test/data_mem.txt"
+`define SINGLE_CYCLE_TEST_DATA_FILE "data/test/SingleCycle/data_mem.txt"
 
-// Instruction memory for pipeline test
-`define PIPELINE_TEST_INST_FILE "data/test/pipeline_inst_mem.txt"
+// Pipeline Test
+// Instruction memory file
+`define PIPELINE_TEST_INST_FILE "data/test/Pipeline/inst_mem.txt"
 // Data memory for test
-`define PIPELINE_TEST_DATA_FILE "data/test/pipeline_data_mem.txt"
+`define PIPELINE_TEST_DATA_FILE "data/test/Pipeline/data_mem.txt"
 
 //*******************************
 // Definition of instruction opcode
@@ -148,10 +164,10 @@
 `define ALU_NONE  4'b1111
 
 `define TB_BEGIN \
-    $display("=== BEGIN TESTBENCH %m ===\n");
+    $display("========= BEGIN TESTBENCH %m =========\n");
     
 `define TB_END \
-    #`CYCLE $display("\n===== END TESTBENCH %m ===");
+    #`CYCLE $display("\n========== END TESTBENCH %m =========");
     
 `define CYCLE 10
 `define HALF_CYCLE (`CYCLE/2)
