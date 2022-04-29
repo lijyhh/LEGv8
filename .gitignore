@@ -4,3 +4,4 @@ transcript
 *.rc
 *.fsdb
 *.vcd
+*.f
