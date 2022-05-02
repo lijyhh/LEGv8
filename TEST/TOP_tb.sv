@@ -28,8 +28,8 @@
 `define SINGLE_CYCLE
 
 //`define FACT 
-//`define AUTO_SORT
-`define MANUAL_SORT
+`define AUTO_SORT
+//`define MANUAL_SORT
 
 module TOP_tb();
 
@@ -42,11 +42,11 @@ module TOP_tb();
   parameter MEM_SIZE = 1024; // Data memory depth
 
 `ifdef FACT
-    //parameter INST_FILE = `SINGLE_CYCLE_FACT_INST_FILE;
-    //parameter DATA_FILE = `SINGLE_CYCLE_FACT_DATA_FILE; 
+    parameter INST_FILE = `SINGLE_CYCLE_FACT_INST_FILE;
+    parameter DATA_FILE = `SINGLE_CYCLE_FACT_DATA_FILE; 
 
-    parameter INST_FILE = `PIPELINE_FACT_INST_FILE;
-    parameter DATA_FILE = `PIPELINE_FACT_DATA_FILE; 
+    //parameter INST_FILE = `PIPELINE_FACT_INST_FILE;
+    //parameter DATA_FILE = `PIPELINE_FACT_DATA_FILE; 
 `elsif AUTO_SORT
     parameter INST_FILE = `SINGLE_CYCLE_SORT_INST_FILE;
     parameter DATA_FILE = `SINGLE_CYCLE_SORT_DATA_FILE; 
@@ -197,6 +197,7 @@ module TOP_tb();
   
   // Data number to be sorted
   reg [63:0] tb_num_data;
+  integer j;                              // Variable in loop to print value in 
   
   // Open data file to be written
   initial begin

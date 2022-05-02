@@ -26,7 +26,7 @@
 // Module
 module IF_tb;
 
-  parameter INST_FILE = `SINGLE_CYCLE_TEST_INST_FILE;
+  parameter INST_FILE = `TEST_INST_FILE;
   
   reg                         tb_clk     ;                
   reg                         tb_rst_n   ;             
@@ -77,7 +77,7 @@ module IF_tb;
     input integer i;
     begin
       #`CYCLE assert(tb_inst == inst) 
-        $strobe("%0d, !!TEST SUCCESS!!", $time);
+        $strobe("[Time: %0d] Instruction is %0d, !!TEST SUCCESS!!", $time, tb_inst);
       else $error("[%0d] tb_inst = %0d", i, inst);
     end
   endtask

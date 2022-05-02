@@ -81,7 +81,8 @@ module EX_tb();
     input integer i;
     begin
       assert(tb_ALUOut == ALUOut && tb_ALU_res == ALU_res) 
-      else $error("[%0d] tb_ALUOut = %0d, tb_ALU_res = %h", 
+        $strobe("[Time: %0d],  ALUOut is 0x%16h, ALU_res is 0x%16h, !!TEST SUCCESS!!", $time, tb_ALUOut, tb_ALU_res);
+      else $error("[%0d],  tb_ALUOut is 0x%16h, tb_ALU_res is 0x%16h", 
         i, tb_ALUOut, tb_ALU_res);
     end
   endtask

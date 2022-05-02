@@ -42,7 +42,7 @@ module ALU_control_tb();
     begin
       #`CYCLE;
       assert( tb_ALUCtl == ALUCtl ) 
-        $strobe("%0d, !!TEST SUCCESS!!", $time);
+        $strobe("[Time: %0d], ALUCtl is 'b%0b !!TEST SUCCESS!!", $time, tb_ALUCtl);
       else $error("[%0d], tb_ALUCtl = 'b%0b", i, ALUCtl);
     end
   endtask

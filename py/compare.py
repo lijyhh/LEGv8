@@ -1,10 +1,10 @@
 import os  
 
-# random_data_file_tb_sort = './data/bubble_sort/SingleCycle/data_mem_tb_sorted.txt'
-# random_data_file_py_sort = './data/bubble_sort/SingleCycle/data_mem_py_sorted.txt'
+random_data_file_tb_sort = './data/bubble_sort/SingleCycle/data_mem_tb_sorted.txt'
+random_data_file_py_sort = './data/bubble_sort/SingleCycle/data_mem_py_sorted.txt'
 
-random_data_file_tb_sort = './data/bubble_sort/Pipeline/data_mem_tb_sorted.txt'
-random_data_file_py_sort = './data/bubble_sort/Pipeline/data_mem_py_sorted.txt'
+# random_data_file_tb_sort = './data/bubble_sort/Pipeline/data_mem_tb_sorted.txt'
+# random_data_file_py_sort = './data/bubble_sort/Pipeline/data_mem_py_sorted.txt'
 
 def cmp_file(f1, f2):
     st1 = os.stat(f1)

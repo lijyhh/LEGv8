@@ -62,17 +62,17 @@ module write_back_tb();
     tb_r_data2  = 'd80; 
     tb_MemtoReg = 'b00;
     #`CYCLE;
-    assert( tb_w_data == 100 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    assert( tb_w_data == 100 ) $strobe("[Time: %0d], Write data is %0d, !!TEST SUCCESS!!", $time, tb_w_data);
     else $error("tb_w_data = %0d", tb_w_data);
 
     tb_MemtoReg = 'b01;
     #`CYCLE;
-    assert( tb_w_data == 90 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    assert( tb_w_data == 90 ) $strobe("[Time: %0d], Write data is %0d, !!TEST SUCCESS!!", $time, tb_w_data);
     else $error("tb_w_data = %0d", tb_w_data);
 
     tb_MemtoReg = 'b10;
     #`CYCLE;
-    assert( tb_w_data == 200 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    assert( tb_w_data == 200 ) $strobe("[Time: %0d], Write data is %0d, !!TEST SUCCESS!!", $time, tb_w_data);
     else $error("tb_w_data = %0d", tb_w_data);
 
     `TB_END

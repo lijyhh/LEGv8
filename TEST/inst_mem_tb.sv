@@ -26,7 +26,7 @@
 // Module
 module inst_mem_tb();
 
-  parameter PATH = `SINGLE_CYCLE_TEST_INST_FILE;
+  parameter PATH = `TEST_INST_FILE;
 
   reg                   tb_clk  ;
   reg  [`WORD-1:0]      tb_pc   ;
@@ -51,9 +51,9 @@ module inst_mem_tb();
     repeat(64) begin // 1024 is too much console spam
       @(negedge tb_clk)
       #1 assert(tb_inst == tb_pc / 4) 
-        $strobe("%0d, !!TEST SUCCESS!!", $time);
+        $strobe("[Time: %0d] Fetch Instruction is %0d, !!TEST SUCCESS!!", $time, tb_inst);
       else $error("ERROR!");       
-      tb_pc = tb_pc + 4;
+      #1 tb_pc = tb_pc + 4;
     end
     `TB_END
     $finish;

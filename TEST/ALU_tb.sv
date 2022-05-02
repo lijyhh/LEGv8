@@ -41,96 +41,52 @@ module ALU_tb();
   .Overflow ( tb_Overflow  ),     // Overflow flag for signed
   .Negative ( tb_Negative  )      // Negative flag for signed
   ); 
+
+  task my_assert;
+    input [63:0] a;
+    input [63:0] b;
+    input [03:0] ALUCtl;
+    input  Overflow, Negative, Zero;
+    input [63:0] ALUOut;
+    begin
+      tb_a = a;
+      tb_b = b;
+      tb_ALUCtl = ALUCtl;
+      #`CYCLE;
+      assert(tb_Overflow == Overflow) else $error("[0] tb_Overflow == %0d", tb_Overflow);
+      assert(tb_Negative == Negative) else $error("[1] tb_Negative == %0d", tb_Negative);
+      assert(tb_Zero == Zero) else $error("[2] tb_Zero == %0d", tb_Zero);
+      assert(tb_ALUOut == ALUOut) else $error("tb_ALUOut = %0h", tb_ALUOut);
+      $strobe("|\t%0d\t|\t    %0d  \t\t|\t   %0d\t\t|\t %0d\t|\t0x%16h\t|\tT\t|", $time, tb_Overflow, tb_Negative, tb_Zero, tb_ALUOut);
+    end
+  endtask
  
   initial begin
     `TB_BEGIN
     
-    tb_a = 64'h7FFFFFFFFFFFFFFF;
-    tb_b = 64'h0000000000000001;
-    tb_ALUCtl = `ALU_ADD;
-    #`CYCLE; 
-    assert(tb_Overflow == 0) else $error("[0] tb_Overflow == 1");
-    assert(tb_Negative == 1) else $error("[1] tb_Negative == 0");
-    assert(tb_Zero == 0) else $error("[2] tb_Zero == 1");
-    assert(tb_ALUOut == 64'h8000000000000000) else $error("tb_ALUOut = %h", tb_ALUOut);
-    
-    tb_a = 64'h7FFFFFFFFFFFFFFE;
-    tb_b = 64'h0000000000000001;
-    tb_ALUCtl = `ALU_ADD;
-    #`CYCLE; 
-    assert(tb_Overflow == 0) else $error("[3] tb_Overflow == 1");
-    assert(tb_Negative == 0) else $error("[4] tb_Negative == 1");
-    assert(tb_Zero == 0) else $error("[5] tb_Zero == 1"); 
-    assert(tb_ALUOut == 64'h7FFFFFFFFFFFFFFF) else $error("tb_ALUOut = %h", tb_ALUOut);
-    
-    tb_a = 64'h8000000000000000;
-    tb_b = 64'h0000000000000001;
-    tb_ALUCtl = `ALU_SUB;
-    #`CYCLE; 
-    assert(tb_Overflow == 0) else $error("[6] tb_Overflow == 1");
-    assert(tb_Negative == 0) else $error("[7] tb_Negative == 1");
-    assert(tb_Zero == 0) else $error("[8] tb_Zero == 1");
-    assert(tb_ALUOut == 64'h7FFFFFFFFFFFFFFF) else $error("tb_ALUOut = %h", tb_ALUOut);
-    
-    tb_a = 64'h8000000000000000;
-    tb_b = 64'hFFFFFFFFFFFFFFFF;
-    tb_ALUCtl = `ALU_SUB;
-    #`CYCLE;
-    assert(tb_Overflow == 0) else $error("[9] tb_Overflow == 1");
-    assert(tb_Negative == 1) else $error("[10] tb_Negative == 0");
-    assert(tb_Zero == 0) else $error("[11] tb_Zero == 1");
-    assert(tb_ALUOut == 64'h8000000000000001) else $error("tb_ALUOut = %h", tb_ALUOut);
-    
-    tb_a = 64'hFFFFFFFFFFFFFFFD;
-    tb_b = 64'h0000000000000003;
-    tb_ALUCtl = `ALU_ADD;
-    #`CYCLE;
-    assert(tb_Overflow == 0) else $error("[12] tb_Overflow == 1");
-    assert(tb_Negative == 0) else $error("[13] tb_Negative == 1");
-    assert(tb_Zero == 1) else $error("[14] tb_Zero == 0");
-    assert(tb_ALUOut == 64'h0000000000000000) else $error("tb_ALUOut = %h", tb_ALUOut);
-    
-    tb_a = 64'hFFFFFFFFFFFFFFFD;
-    tb_b = 64'h0000000000000003;
-    tb_ALUCtl = `ALU_AND;
-    #`CYCLE;
-    assert(tb_Overflow == 0) else $error("[15] tb_Overflow == 1");
-    assert(tb_Negative == 0) else $error("[16] tb_Negative == 1");
-    assert(tb_Zero == 0) else $error("[17] tb_Zero == 1");
-    assert(tb_ALUOut == 64'h0000000000000001) else $error("tb_ALUOut = %h", tb_ALUOut);
+    $display("|\tTime\t|\tOverflow\t|\tNegative\t|\tZero\t|\tALUOut  \t\t|\tT/F\t|");
 
-    tb_a = 64'hFFFFFFFFFFFFFFFD;
-    tb_b = 64'h0000000000000003;
-    tb_ALUCtl = `ALU_OR;
-    #`CYCLE;
-    assert(tb_Overflow == 0) else $error("[18] tb_Overflow == 1");
-    assert(tb_Negative == 1) else $error("[19] tb_Negative == 0");
-    assert(tb_Zero == 0) else $error("[20] tb_Zero == 1");
-    assert(tb_ALUOut == 64'hFFFFFFFFFFFFFFFF) else $error("tb_ALUOut = %h", tb_ALUOut);
-     
+    my_assert(64'h7FFFFFFFFFFFFFFF, 64'h0000000000000001, `ALU_ADD, 0, 1, 0, 64'h8000000000000000);
+    
+    my_assert(64'h7FFFFFFFFFFFFFFE, 64'h0000000000000001, `ALU_ADD, 0, 0, 0, 64'h7FFFFFFFFFFFFFFF);
+       
+    my_assert(64'hFFFFFFFFFFFFFFFD, 64'h0000000000000003, `ALU_ADD, 0, 0, 1, 64'h0000000000000000);
+   
+    my_assert(64'h8000000000000000, 64'h0000000000000001, `ALU_SUB, 0, 0, 0, 64'h7FFFFFFFFFFFFFFF);
+    
+    my_assert(64'h8000000000000000, 64'hFFFFFFFFFFFFFFFF, `ALU_SUB, 0, 1, 0, 64'h8000000000000001);
+  
+    my_assert(64'hFFFFFFFFFFFFFFFD, 64'h0000000000000003, `ALU_AND, 0, 0, 0, 64'h0000000000000001);
 
-    tb_a = 64'hFFFFFFFFFFFFFFFD;
-    tb_b = 64'h0000000000000003;
-    tb_ALUCtl = `ALU_PASS;
-    #`CYCLE;
-    assert(tb_Overflow == 0) else $error("[21] tb_Overflow == 1");
-    assert(tb_Negative == 0) else $error("[22] tb_Negative == 1");
-    assert(tb_Zero == 0) else $error("[23] tb_Zero == 1");
-    assert(tb_ALUOut == 64'h0000000000000003) else $error("tb_ALUOut = %h", tb_ALUOut);
+    my_assert(64'hFFFFFFFFFFFFFFFD, 64'h0000000000000003, `ALU_OR, 0, 1, 0, 64'hFFFFFFFFFFFFFFFF);
 
-    tb_a = 64'hFFFFFFFFFFFFFFFD;
-    tb_b = 64'h0000000000000003;
-    tb_ALUCtl = `ALU_NOR;
-    #`CYCLE;
-    assert(tb_Overflow == 0) else $error("[24] tb_Overflow == 1");
-    assert(tb_Negative == 0) else $error("[25] tb_Negative == 1");
-    assert(tb_Zero == 1) else $error("[26] tb_Zero == 0");
-    assert(tb_ALUOut == 64'h0000000000000000) else $error("tb_ALUOut = %h", tb_ALUOut);
+    my_assert(64'hFFFFFFFFFFFFFFFD, 64'h0000000000000003, `ALU_PASS, 0, 0, 0, 64'h0000000000000003);
+
+    my_assert(64'hFFFFFFFFFFFFFFFD, 64'h0000000000000003, `ALU_ADD, 0, 0, 1, 64'h0000000000000000);
 
     `TB_END
     $finish;
   end
-
 
 endmodule
 

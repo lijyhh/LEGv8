@@ -27,7 +27,7 @@
 //
 // Module
 module inst_mem #( 
-  parameter PATH = `SINGLE_CYCLE_TEST_INST_FILE, // instruction file
+  parameter PATH = `TEST_INST_FILE, // instruction file
   parameter SIZE = 1024)( // size of instruction mem
   pc          ,  
   inst             

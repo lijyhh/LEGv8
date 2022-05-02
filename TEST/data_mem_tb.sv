@@ -26,7 +26,7 @@
 // Module
 module data_mem_tb();
   
-  parameter DATA_FILE = `SINGLE_CYCLE_TEST_DATA_FILE;
+  parameter DATA_FILE = `TEST_DATA_FILE;
   
   reg                             tb_clk     ;                  
   reg                             tb_MemRead ;                   
@@ -65,14 +65,14 @@ module data_mem_tb();
     tb_MemRead = 'b1;
     tb_addr = 'd64;  // Read data is 8
     #`CYCLE;
-    assert( tb_r_data == 8 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    assert( tb_r_data == 8 ) $display("[Time: %0d], Read data is %0d, !!TEST SUCCESS!!", $time, tb_r_data);
     else $error("tb_r_data = %0d", tb_r_data);
 
 
     tb_MemRead = 'b1;
     tb_addr = 'd128;  // Read data is 16
     #`CYCLE;
-    assert( tb_r_data == 16 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    assert( tb_r_data == 16 ) $display("[Time: %0d], Read data is %0d, !!TEST SUCCESS!!", $time, tb_r_data);
     else $error("tb_r_data = %0d", tb_r_data);
 
     tb_MemRead = 'b0;
@@ -85,7 +85,7 @@ module data_mem_tb();
     tb_MemWrite = 'b0;
     tb_addr = 'd64;  // Read data is 13
     #`CYCLE;
-    assert( tb_r_data == 13 ) $strobe("%0d, !!TEST SUCCESS!!", $time);
+    assert( tb_r_data == 13 ) $display("[Time: %0d], Read data is %0d, !!TEST SUCCESS!!", $time, tb_r_data);
     else $error("tb_r_data = %0d", tb_r_data);
     #`CYCLE;
 

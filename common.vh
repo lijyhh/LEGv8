@@ -55,17 +55,11 @@
 `define SORT_DATA_FILE  "data/bubble_sort/0/data_mem.txt"
 
 /////////////////////////////////
-// Single Cycle Test
+// Test
 // Instruction memory file
-`define SINGLE_CYCLE_TEST_INST_FILE "data/test/SingleCycle/inst_mem.txt"
+`define TEST_INST_FILE "data/test/inst_mem.txt"
 // Data memory for test
-`define SINGLE_CYCLE_TEST_DATA_FILE "data/test/SingleCycle/data_mem.txt"
-
-// Pipeline Test
-// Instruction memory file
-`define PIPELINE_TEST_INST_FILE "data/test/Pipeline/inst_mem.txt"
-// Data memory for test
-`define PIPELINE_TEST_DATA_FILE "data/test/Pipeline/data_mem.txt"
+`define TEST_DATA_FILE "data/test/data_mem.txt"
 
 //*******************************
 // Definition of instruction opcode
@@ -164,10 +158,10 @@
 `define ALU_NONE  4'b1111
 
 `define TB_BEGIN \
-    $display("========= BEGIN TESTBENCH %m =========\n");
+    $display("\n========= BEGIN TESTBENCH %m =========\n");
     
 `define TB_END \
-    #`CYCLE $display("\n========== END TESTBENCH %m =========");
+    #`CYCLE $display("\n========== END TESTBENCH %m =========\n");
     
 `define CYCLE 10
 `define HALF_CYCLE (`CYCLE/2)
