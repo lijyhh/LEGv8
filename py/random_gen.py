@@ -18,9 +18,10 @@
 
 import os  
 import random 
+import time
 
-num_data = 100
-max_range = 1000000
+num_data = 100000
+max_range = 10000000
 sep = '\n'
 base = 16
 
@@ -30,11 +31,11 @@ X1 = str(num_data)
 X0 = str(3*8)
 
 
-# random_data_file = './data/bubble_sort/SingleCycle/data_mem.txt'
-# random_data_file_sort = './data/bubble_sort/SingleCycle/data_mem_py_sorted.txt'
+random_data_file = './data/bubble_sort/SingleCycle/data_mem.txt'
+random_data_file_sort = './data/bubble_sort/SingleCycle/data_mem_py_sorted.txt'
 
-random_data_file = './data/bubble_sort/Pipeline/data_mem.txt'
-random_data_file_sort = './data/bubble_sort/Pipeline/data_mem_py_sorted.txt'
+# random_data_file = './data/bubble_sort/Pipeline/data_mem.txt'
+# random_data_file_sort = './data/bubble_sort/Pipeline/data_mem_py_sorted.txt'
 
 # Random data generation
 def random_gen():
@@ -122,9 +123,14 @@ def insert_line(file, line, data):
     fp.write(s)
     fp.close()
 
+print("Number of random data is %s"%num_data)
+print("Random generating...")
+start = time.perf_counter()
 random_gen()
 random_sort()
 insert_line(random_data_file, 0, SP)
 insert_line(random_data_file, 1, X1)
 insert_line(random_data_file, 2, X0)
+end = time.perf_counter()
 print("Random generation done!")
+print("Running time: %s s"%(end-start))

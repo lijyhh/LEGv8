@@ -1,4 +1,5 @@
 import os  
+import time
 
 random_data_file_tb_sort = './data/bubble_sort/SingleCycle/data_mem_tb_sorted.txt'
 random_data_file_py_sort = './data/bubble_sort/SingleCycle/data_mem_py_sorted.txt'
@@ -24,5 +25,10 @@ def cmp_file(f1, f2):
             if not b1:
                 return True
 
-print("Compare Done! Sort " + str(cmp_file(random_data_file_tb_sort, random_data_file_py_sort)) + "!")
+print("\nComparing...")
+start = time.perf_counter()
+flag = cmp_file(random_data_file_tb_sort, random_data_file_py_sort)
+end = time.perf_counter()
+print("Compare Done! Sort " + str(flag) + "!")
+print("Running time of comparing: %s s"%(end-start))
 
