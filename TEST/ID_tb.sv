@@ -78,7 +78,7 @@ module ID_tb();
     input integer i;
     begin
       assert(tb_r_data1 == r_data1 && tb_r_data2 == r_data2 && tb_ex_data == ex_data) 
-        $strobe("[Time: %0d], Instruction is 0x%0h, Read data 1 is 0x%0h, Read data 2 is 0x%0h, Extend data is 0x%0h, !!TEST SUCCESS!!", $time, tb_inst, tb_r_data1, tb_r_data2, tb_ex_data);
+        $display("[Time: %0d], Instruction is 0x%0h, Read data 1 is 0x%0h, Read data 2 is 0x%0h, Extend data is 0x%0h, !!TEST SUCCESS!!", $time, tb_inst, tb_r_data1, tb_r_data2, tb_ex_data);
       else $error("[%0d] tb_r_data1 = %0d, tb_r_data2 = %0d, tb_ex_data = 0x%0h", 
         i, tb_r_data1, tb_r_data2, tb_ex_data);
     end

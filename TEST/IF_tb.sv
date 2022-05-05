@@ -51,7 +51,7 @@ module IF_tb;
   end
 
   initial begin
-    $dumpfile(" IF_tb.vcd ");
+    $dumpfile("IF_tb.vcd ");
     $dumpvars();
   end
 

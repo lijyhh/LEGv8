@@ -25,7 +25,7 @@
 //
 // Module
 
-`define SINGLE_CYCLE
+//`define SINGLE_CYCLE
 
 //`define FACT 
 `define AUTO_SORT
@@ -39,22 +39,22 @@ module TOP_tb();
   // 
   // Parameter definition
 
-  parameter MEM_SIZE = 1024; // Data memory depth
+  parameter MEM_SIZE = 1000000; // Data memory depth
 
 `ifdef FACT
-    parameter INST_FILE = `SINGLE_CYCLE_FACT_INST_FILE;
-    parameter DATA_FILE = `SINGLE_CYCLE_FACT_DATA_FILE; 
+    //parameter INST_FILE = `SINGLE_CYCLE_FACT_INST_FILE;
+    //parameter DATA_FILE = `SINGLE_CYCLE_FACT_DATA_FILE; 
 
-    //parameter INST_FILE = `PIPELINE_FACT_INST_FILE;
-    //parameter DATA_FILE = `PIPELINE_FACT_DATA_FILE; 
+    parameter INST_FILE = `PIPELINE_FACT_INST_FILE;
+    parameter DATA_FILE = `PIPELINE_FACT_DATA_FILE; 
 `elsif AUTO_SORT
-    parameter INST_FILE = `SINGLE_CYCLE_SORT_INST_FILE;
-    parameter DATA_FILE = `SINGLE_CYCLE_SORT_DATA_FILE; 
-    parameter DATA_FILE_TB = `SINGLE_CYCLE_SORT_DATA_FILE_TB; 
+    //parameter INST_FILE = `SINGLE_CYCLE_SORT_INST_FILE;
+    //parameter DATA_FILE = `SINGLE_CYCLE_SORT_DATA_FILE; 
+    //parameter DATA_FILE_TB = `SINGLE_CYCLE_SORT_DATA_FILE_TB; 
 
-    //parameter INST_FILE = `PIPELINE_SORT_INST_FILE;
-    //parameter DATA_FILE = `PIPELINE_SORT_DATA_FILE; 
-    //parameter DATA_FILE_TB = `PIPELINE_SORT_DATA_FILE_TB; 
+    parameter INST_FILE = `PIPELINE_SORT_INST_FILE;
+    parameter DATA_FILE = `PIPELINE_SORT_DATA_FILE; 
+    parameter DATA_FILE_TB = `PIPELINE_SORT_DATA_FILE_TB; 
 `elsif MANUAL_SORT
     parameter INST_FILE = `SORT_INST_FILE;
     parameter DATA_FILE = `SORT_DATA_FILE; 
@@ -104,6 +104,8 @@ module TOP_tb();
   .rst_n( tb_rst_n )            
   );
 
+  initial $display("\n=================== SINGLE CYCLE ===================");
+
   assign tb_w_data = TOP_TB.SingleCycleCPU.data_path.WB.w_data;
   assign tb_inst = TOP_TB.inst;
   assign tb_w_reg = TOP_TB.SingleCycleCPU.data_path.ID.w_reg;
@@ -118,6 +120,8 @@ module TOP_tb();
   .rst_n( tb_rst_n )            
   );
 
+  initial $display("\n=================== PIPELINE ===================");
+
   assign tb_w_data = TOP_TB.PipelineCPU.data_path.WB.w_data;
   assign tb_inst = TOP_TB.PipelineCPU.data_path.WB.inst;
   assign tb_w_reg = TOP_TB.PipelineCPU.data_path.ID.w_reg;
@@ -126,10 +130,10 @@ module TOP_tb();
   
   // 
   // Test begin
-  initial begin
-    delay(10000000);
-    $finish;
-  end
+  //initial begin
+  //  delay(10000000);
+  //  $finish;
+  //end
 
   // 
   // Data memory handle
@@ -231,7 +235,6 @@ module TOP_tb();
       end
     end
     $fclose(tb_data_mem_handle);
-    $display("\nComparing...");
     $system("python py/compare.py");
     `TB_END
     $finish;
@@ -248,7 +251,7 @@ module TOP_tb();
  
   // 
   // Used for sort test
-  reg  [`WORD - 1 : 0]         tb_v[8:0]; // Array v in testbench
+  reg  [`WORD - 1 : 0]         tb_v[4:0]; // Array v in testbench
   integer j;                              // Variable in loop to print value in 
 
   // Assert sorted data

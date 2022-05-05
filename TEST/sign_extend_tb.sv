@@ -39,7 +39,7 @@ module sign_extend_tb();
     input integer i;
     begin
       #`CYCLE assert(tb_ex_data == ex_data) 
-        $strobe("[Time: %0d], Extend data is 0x%0h, !!TEST SUCCESS!!", $time, tb_ex_data);
+        $display("[Time: %0d], Extend data is 0x%0h, !!TEST SUCCESS!!", $time, tb_ex_data);
       else $error("[%0d] tb_ex_data = %0h", i, ex_data);
     end
   endtask
