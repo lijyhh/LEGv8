@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import re
 '''
     File: legv8_asm.py
     Description: A python script to generate machine code for a subset of ARM LEGv8 instructions
@@ -13,18 +12,21 @@ import re
     Modify: Zehua Dong, SIGS, 2022.04.03
     Version: 3
     NOTE:
-    1. Support some other instructions: LSL, BR, MUL, ADDI, SUBS, SUBI, SUBIS, BL, B.cond, CMP, MUL, MOV.
+    1. Add support: LSL, BR, MUL, ADDI, SUBS, SUBI, SUBIS, BL, B.cond, CMP, MUL, MOV, NOP.
     2. Package this file into a function named as 'single_inst_parse()' in order to parse instructions in batch mode.
     3. This function is not only allow you to use one space to separate each keyword, such as: 'ADD X1, X2, X3' but
-        also 'ADD  X1,    X2, X3' is allowed. Also you can ignore space between the two registers, such as:
-        'ADD X1,X2,X3'. Besides, you can use a lowercase letter to name register, such as: 'ADD x1, x2, x3' but
-        instruction name must be all uppercase. In fact, you can use other letters to name registers, such as
-        'ADD, r1, x2, y3', or just ignore the register name(ADD 1,2,3), we dont really care it.
+        also 'ADD  X1,    X2, X3' is allowed.
+
+        Also you can ignore space between the two registers, such as: 'ADD X1,X2,X3'. Besides, you can use a 
+        lowercase letter to name register, such as: 'ADD x1, x2, x3' but instruction name must be all uppercase. 
+        
+        In fact, you can use other letters to name registers, such as 'ADD, r1, x2, y3', or just ignore the 
+        register name(ADD 1,2,3), we dont really care it.
     4. Support XZR, SP, FP, LR registers, you can use it in anywhere, such as: 'ADD XZR, FP, SP'.
     5. Negative is allowed now, you can input 'ADDI X1, X2, #-3' or maybe 'B #-6'.
     6. Comment in your asm code is allowed now, such as: 'ADD X1, X2, X3 ;X1 = X2 + X3' or maybe "; This is a asm code" 
         on a separate line.
-    7. '\n' is allowed in your instruction, such as: 'ADD X1, X2, X3\n', empty is also allowed.
+    7. '\n' is allowed in your instruction, such as: 'ADD X1, X2, X3\n', empty is also allowed, such as: 'ADD X1, X2, X3'.
     8. You can write 32 bits binary or 32 bits hexadecimal into your files by specify the 'bin', 'BIN' or 'hex', 'HEX'
         in single_inst_parse() func parameter 'base', such as: 'single_inst_parse(raw_instruction, 'bin')'.
     9. We dont support Label in your asm code.
@@ -34,8 +36,13 @@ import re
     How to use:
     There are two ways to use: one is input a single instruction each time realized in single_inst_from_keyboard(),
       another is specify a file contained all your code realized in batch_process_insts(src_file, obj_file, 'BIN').
+    Then select one of the two ways above mentioned, uncommented and run Python script: 
+      'cd prj_dir
+       python py/legv8_asm.py'
 '''
 
+import re
+import sys
 
 def trans_inst(insts):
     i = 0
@@ -120,7 +127,7 @@ def single_inst_parse(raw_instruction, base):
     # [31:0] == [MSB:LSB]
     machine_code = OPCODES[instruction_list[0]][0]
 
-    print('\n------- C Interpretation -------')
+    if print_flag == '1': print('\n------- C Interpretation -------')
 
     if (instruction_list[0] == 'LDUR' or instruction_list[0] == 'STUR'): # D-Type
         # LDUR X10, [X9, #16]
@@ -132,10 +139,10 @@ def single_inst_parse(raw_instruction, base):
         rt = int(''.join(filter(str.isdigit, instruction_list[1])))
 
         if (instruction_list[0] == 'LDUR'): # LDUR
-            print('Register[' + str(rt) + '] = RAM[ Register[' + str(rn) + ']' +
+            if print_flag == '1': print('Register[' + str(rt) + '] = RAM[ Register[' + str(rn) + ']' +
                   ('' if len(instruction_list) < 4 else (' + ' + str(dt_address))) + ' ]')
         else: # STUR
-            print('RAM[ Register[' + str(rn) + ']' +
+            if print_flag == '1': print('RAM[ Register[' + str(rn) + ']' +
                   ('' if len(instruction_list) < 4 else (' + ' + str(dt_address))) + ' ] = Register[' + str(rt) + ']')
 
         machine_code += str(bin(dt_address)[2:].zfill(9)) + op + str(bin(rn)[2:].zfill(5)) + str(bin(rt)[2:].zfill(5))
@@ -153,7 +160,7 @@ def single_inst_parse(raw_instruction, base):
         shamt = '000000' # LSL and LSR support has not been added
         rn = int(''.join(filter(str.isdigit, instruction_list[2])))
         rd = int(''.join(filter(str.isdigit, instruction_list[1])))
-        print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
+        if print_flag == '1': print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
               + OPCODES[instruction_list[0]][1] + ' Register[' + str(rm) + ']')
 
         machine_code += str(bin(rm)[2:].zfill(5)) + shamt + str(bin(rn)[2:].zfill(5)) + str(bin(rd)[2:].zfill(5))
@@ -168,11 +175,11 @@ def single_inst_parse(raw_instruction, base):
         # Judge immediate if negative
         immediate = int(''.join(filter(str.isdigit, instruction_list[3])))
         if re.match(".*[-][\d]*", instruction_list[3]):
-            print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
+            if print_flag == '1': print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
               + OPCODES[instruction_list[0]][1] + ' (-' + str(immediate) + ')')
             immediate = str(bin(-immediate & ex_table[11]))[2:]
         else:
-            print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
+            if print_flag == '1': print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
               + OPCODES[instruction_list[0]][1] + ' ' + str(immediate))
             immediate = str(bin(immediate)[2:].zfill(11))
 
@@ -183,7 +190,7 @@ def single_inst_parse(raw_instruction, base):
         shamt = int(''.join(filter(str.isdigit, instruction_list[3])))
         rn = int(''.join(filter(str.isdigit, instruction_list[2])))
         rd = int(''.join(filter(str.isdigit, instruction_list[1])))
-        print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
+        if print_flag == '1': print('Register[' + str(rd) + '] = Register[' + str(rn) + '] '
               + OPCODES[instruction_list[0]][1] + ' ' + str(shamt))
 
         machine_code += str(bin(shamt)[2:].zfill(11)) + str(bin(rn)[2:].zfill(5)) + str(bin(rd)[2:].zfill(5))
@@ -191,7 +198,7 @@ def single_inst_parse(raw_instruction, base):
     elif (instruction_list[0] == 'BR'):
         # BR X30
         rd = int(''.join(filter(str.isdigit, instruction_list[1])))
-        print('PC = ' + 'Register[' + str(rd) + ']')
+        if print_flag == '1': print('PC = ' + 'Register[' + str(rd) + ']')
 
         machine_code += str(bin(rd)[2:].zfill(21))
 
@@ -203,15 +210,15 @@ def single_inst_parse(raw_instruction, base):
         br_address = int(''.join(filter(str.isdigit, instruction_list[1])))
         if re.match(".*[-][\d]*", instruction_list[1]):
             if(instruction_list[0] == 'B') :
-                print('PC = PC + 1 + ' + ' (-' + str(br_address) + ')')
+                if print_flag == '1': print('PC = PC + 1 + ' + ' (-' + str(br_address) + ')')
             else: # BL
-                print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + '(-' + str(br_address) + ')')
+                if print_flag == '1': print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + '(-' + str(br_address) + ')')
             br_address = str(bin(-br_address & ex_table[21]))[2:]
         else:
             if(instruction_list[0] == 'B') :
-                print('PC = PC + 1 + ' + str(br_address))
+                if print_flag == '1': print('PC = PC + 1 + ' + str(br_address))
             else : # BL
-                print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + str(br_address))
+                if print_flag == '1': print('Register[30] = PC + 1' + ', PC = PC + 1 + ' + str(br_address))
             br_address = str(bin(br_address)[2:].zfill(21))
 
         machine_code += br_address
@@ -223,12 +230,12 @@ def single_inst_parse(raw_instruction, base):
 
         cond_br_address = int(''.join(filter(str.isdigit, instruction_list[2])))
         if re.match(".*[-][\d]*", instruction_list[2]):
-            print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + '(-' + str(cond_br_address) + ') }')
-            print('else { PC++ }')
+            if print_flag == '1': print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + '(-' + str(cond_br_address) + ') }')
+            if print_flag == '1': print('else { PC++ }')
             cond_br_address = str(bin(-cond_br_address & ex_table[16]))[2:]
         else:
-            print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
-            print('else { PC++ }')
+            if print_flag == '1': print('if ( Register[' + str(rt) + '] == 0 ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
+            if print_flag == '1': print('else { PC++ }')
             cond_br_address = str(bin(cond_br_address)[2:].zfill(16))
 
 
@@ -241,12 +248,12 @@ def single_inst_parse(raw_instruction, base):
 
         cond_br_address = int(''.join(filter(str.isdigit, instruction_list[2])))
         if re.match(".*[-][\d]*", instruction_list[2]):
-            print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + '(-' + str(cond_br_address) + ') }')
-            print('else { PC++ }')
+            if print_flag == '1': print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + '(-' + str(cond_br_address) + ') }')
+            if print_flag == '1': print('else { PC++ }')
             cond_br_address = str(bin(-cond_br_address & ex_table[16]))[2:]
         else:
-            print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
-            print('else { PC++ }')
+            if print_flag == '1': print('if ( A ' + BCOND[instruction_list[1]][1] + ' B ) { PC = PC + 1 + ' + str(cond_br_address) + ' }')
+            if print_flag == '1': print('else { PC++ }')
             cond_br_address = str(bin(cond_br_address)[2:].zfill(16))
 
     
@@ -258,10 +265,10 @@ def single_inst_parse(raw_instruction, base):
     
     hex_machine_code = str(hex(int(machine_code, 2)))[2:]
     # Output the machine code representation of the input
-    print('\n------- Machine Code (' + str(len(machine_code)) + '-bits) -------')
-    print('BINARY : ' + machine_code)
-    print('HEX    : ' + hex_machine_code)
-    print('')
+    if print_flag == '1': print('\n------- Machine Code (' + str(len(machine_code)) + '-bits) -------')
+    if print_flag == '1': print('BINARY : ' + machine_code)
+    if print_flag == '1': print('HEX    : ' + hex_machine_code)
+    if print_flag == '1': print('')
 
     if base in ('bin', 'BIN'):
         return machine_code
@@ -281,7 +288,7 @@ def read_inst(file):
             pass
         else:
             lines.append(tmp)
-    # print(lines)
+    # if print_flag == '1': print(lines)
     fp.close()
 
     return lines
@@ -310,35 +317,49 @@ def batch_process_insts(src_file, obj_file, base):
 
 if __name__ == '__main__':
 
-    # Get Instruction from keyboard and display
-    # single_inst_from_keyboard()
+    if len(sys.argv) in [1, 2]:
+        # If not specify the second parameter
+        # Default: Print message
+        print_flag = '1'
+    else:
+        print_flag = sys.argv[2]
 
-    # Process instructions in batch mode
-    src_file1 = './data/factorial/SingleCycle/factorial.asm'
-    obj_file1 = './data/factorial/SingleCycle/inst_mem.txt'
-    print("\nCurrent file is: ", src_file1)
-    batch_process_insts(src_file1, obj_file1, 'HEX')
+    if len(sys.argv) == 1:
+        # If not specify the first parameter
+        # Default: Single Instruction mode
+        mode = 's'
+    else:
+        mode = sys.argv[1]
 
-    src_file2 = './data/factorial/Pipeline/factorial.asm'
-    obj_file2 = './data/factorial/Pipeline/inst_mem.txt'
-    print("\nCurrent file is: ", src_file2)
-    batch_process_insts(src_file2, obj_file2, 'hex')
+    if mode == 's':
+        # Get Instruction from keyboard and display
+        single_inst_from_keyboard()
+    elif mode == 'b':
+        # Process instructions in batch mode
+        src_file1 = './data/factorial/SingleCycle/factorial.asm'
+        obj_file1 = './data/factorial/SingleCycle/inst_mem.txt'
+        if print_flag == '1': print("\nCurrent file is: ", src_file1)
+        batch_process_insts(src_file1, obj_file1, 'HEX')
 
-    src_file3 = './data/bubble_sort/SingleCycle/bubble_sort.asm'
-    obj_file3 = './data/bubble_sort/SingleCycle/inst_mem.txt'
-    print("\nCurrent file is: ", src_file3)
-    batch_process_insts(src_file3, obj_file3, 'hex')
+        src_file2 = './data/factorial/Pipeline/factorial.asm'
+        obj_file2 = './data/factorial/Pipeline/inst_mem.txt'
+        if print_flag == '1': print("\nCurrent file is: ", src_file2)
+        batch_process_insts(src_file2, obj_file2, 'hex')
 
-    src_file4 = './data/bubble_sort/Pipeline/bubble_sort.asm'
-    obj_file4 = './data/bubble_sort/Pipeline/inst_mem.txt'
-    print("\nCurrent file is: ", src_file4)
-    batch_process_insts(src_file4, obj_file4, 'hex')
+        src_file3 = './data/bubble_sort/SingleCycle/bubble_sort.asm'
+        obj_file3 = './data/bubble_sort/SingleCycle/inst_mem.txt'
+        if print_flag == '1': print("\nCurrent file is: ", src_file3)
+        batch_process_insts(src_file3, obj_file3, 'hex')
 
-    src_file5 = './data/bubble_sort/0/bubble_sort.asm'
-    obj_file5 = './data/bubble_sort/0/inst_mem.txt'
-    print("\nCurrent file is: ", src_file5)
-    batch_process_insts(src_file5, obj_file5, 'hex')
+        src_file4 = './data/bubble_sort/Pipeline/bubble_sort.asm'
+        obj_file4 = './data/bubble_sort/Pipeline/inst_mem.txt'
+        if print_flag == '1': print("\nCurrent file is: ", src_file4)
+        batch_process_insts(src_file4, obj_file4, 'hex')
 
+        src_file5 = './data/bubble_sort/0/bubble_sort.asm'
+        obj_file5 = './data/bubble_sort/0/inst_mem.txt'
+        if print_flag == '1': print("\nCurrent file is: ", src_file5)
+        batch_process_insts(src_file5, obj_file5, 'hex')
 
 
 
