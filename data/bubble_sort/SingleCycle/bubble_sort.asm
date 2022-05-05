@@ -35,7 +35,7 @@ MOV X22, X1         ; copy parameter X1 into X22
 ; 32 9th
 MOV X19, XZR        ; i = 0
 ; 36 10th for1tst
-CMP X19, X22         ; compare X19 to X22 (i to n)
+CMP X19, X22        ; compare X19 to X22 (i to n)
 ; 40 11th
 B.GE #17            ; go to exit1 if X19 >= X22 (i >= n)
 
