@@ -133,8 +133,6 @@ module PipelineDatapath(
   wire     [`INST_SIZE - 1 : 0]        IF_ID_inst; 
   wire     [`WORD - 1 : 0]             IF_ID_pc  ; 
 
-  wire     [`WORD - 1 : 0]             IF_pc_incr;
-
   // Internal signals from ID to EX
   wire     [ID_EX_CON_SIZE - 1 : 0]    ID_EX_Control_tmp; 
 
@@ -207,7 +205,7 @@ module PipelineDatapath(
   .ALUOut ( EX_MEM_ALUOut    ) ,    // Result of ALU in EX
   .PCSrc  ( MEM_PCSrc        ) ,    // Control signal of PCSrc 
   .pc     ( pc               ) ,    // Current PC
-  .pc_incr( IF_pc_incr       )      // Current PC + 4
+  .pc_incr(                  )      // Current PC + 4
   );
 
   // IF ID
