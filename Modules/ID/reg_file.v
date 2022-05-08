@@ -15,7 +15,7 @@
 //*@Date     : 2022/3/28 23:39:39
 //
 //*@Function : 
-//*@V0.0     : Realize register file read and wirte. 
+//*@V0.0     : Realize register file read and write. 
 //*@V0.1     : Replace initial block to always block.
 //
 //******************************************************************
